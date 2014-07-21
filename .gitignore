@@ -6,3 +6,4 @@ tramp
 session.*
 backups/
 history
+auto-save-list/

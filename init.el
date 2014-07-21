@@ -98,7 +98,7 @@ If REPOSITORY is specified, use that."
     (fringe-mode 4))			;default 8
 ;; frame buffer - buffer or file name
 (setq frame-title-format
-      '("" invocation-name " philip - " (:eval (if (buffer-file-name)
+      '("" invocation-name " xxx - " (:eval (if (buffer-file-name)
 						   (abbreviate-file-name (buffer-file-name))
 						 "%b"))))
 (setq visible-bell t)			;no audio but flash
@@ -320,9 +320,7 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 		("\\.\\(?:odt\\|doc\\|docx\\)\\'" "libreoffice" ("--writer" file))
 		("\\.\\(?:ods\\|xls\\|xlsx\\)\\'" "libreoffice" ("--calc" file))
 		("\\.\\(?:odp\\|pps\\|ppt\\|pptx\\)\\'" "libreoffice" ("--impress" file))
-		("\\.dia\\'" "dia" (file))))))
-
-;; helm-swoop--a fast way to search things
+		("\\.dia\\'" "dia" (file))))));; helm-swoop--a fast way to search things
 (my/package-install 'helm-swoop)
 (use-package helm-swoop
   :bind (("C-S-s" . helm-swoop)))
@@ -430,8 +428,6 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; misc
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq user-full-name "philip.liu"
-      user-mail-address "lpf_bird@163.com")
 (global-set-key (kbd "C-c e") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (define-key emacs-lisp-mode-map (kbd "M-s e b") 'eval-buffer)
 (define-key emacs-lisp-mode-map (kbd "M-s e r") 'eval-region)
