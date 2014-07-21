@@ -1,0 +1,8 @@
+*~
+*.cache
+*.eld
+savehist
+tramp
+session.*
+backups/
+history
