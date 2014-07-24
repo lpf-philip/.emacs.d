@@ -164,7 +164,7 @@
   :group 'gtags
   :type 'boolean)
 
-(defcustom gtags-prefix-key "\C-c"
+(defcustom gtags-prefix-key "\C-cg"
   "*If non-nil, it is used for the prefix key of gtags-xxx command."
   :group 'gtags
   :type 'string)

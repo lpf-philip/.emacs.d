@@ -300,7 +300,7 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
   :init
   (setq guide-key/guide-key-sequence
         '("C-x" "C-x r" "C-x 4"
-          "C-c" "C-c p"
+          "C-c" "C-c p" "C-c g"
           "M-s"
           "C-h"))
   (guide-key-mode 1))
@@ -586,12 +586,29 @@ point reaches the beginning or end of the buffer, stop there."
              (setq hl-line-face 'underline)
              (hl-line-mode 1)
              ))
+(defun my/gtags-mode
+  (lambda ()
+    (gtags-mode t)))
 (add-hook 'c-mode-hook
-	  '(lambda ()
-	     (gtags-mode t)
-	     ))
+          '(lambda ()
+             (gtags-mode t)))
+(add-hook 'c++-mode-hook
+          '(lambda ()
+             (gtags-mode t)))
+(add-hook 'java-mode-hook
+          '(lambda ()
+             (gtags-mode t)))
+(add-hook 'asm-mode-hook
+          '(lambda ()
+             (gtags-mode t)))
+(add-hook 'makefile-mode-hook
+          '(lambda ()
+             (gtags-mode t)))
+
 (setq gtags-suggested-key-mapping t)
 (setq gtags-auto-update t)
+
+
 
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
