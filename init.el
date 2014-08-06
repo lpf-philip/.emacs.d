@@ -409,7 +409,7 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
   :init
   (progn
     (require 'helm-config)
-    (setq helm-candidate-number-limit 10)
+    ;; (setq helm-candidate-number-limit 10)
     ;; From https://gist.github.com/antifuchs/9238468
     (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
 	  helm-input-idle-delay 0.01  ; this actually updates things
