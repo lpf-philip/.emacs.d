@@ -1,12 +1,26 @@
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; fly in EMACS
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; http://pages.sachachua.com/.emacs.d/Sacha.html
+(setq emacs-load-start-time (current-time))
+
+;; (require 'setup-package)
+;; (require 'setup-backup-history)
+;; (require 'setup-window)
+;; (require 'setup-modeline)
 
 ;; This sets up the load path so that we can override it
-(package-initialize nil)
-(add-to-list 'load-path "~/.emacs.d/elisp/")
-(setq load-path (cons "~/.emacs.d" load-path))
-(package-initialize t)
+(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+;----------------------------------------------------------------------------
+; Functions (load all files in defuns-dir)
+; Copied from https://github.com/magnars/.emacs.d/blob/master/init.el
+;----------------------------------------------------------------------------
+;; (setq defuns-dir (expand-file-name "~/.emacs.d"))
+;; (dolist (file (directory-files defuns-dir t "\\w+"))
+;;   (when (file-regular-p file)
+;;       (load file)))
+
+(package-initialize)
 (setq package-enable-at-startup nil)
 
 ;; (solarized-dark)
@@ -56,6 +70,7 @@ If REPOSITORY is specified, use that."
 (require 'use-package)
 
 
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; files management
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -79,10 +94,10 @@ If REPOSITORY is specified, use that."
 	regexp-search-ring))
 
 
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; windows management
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 (when window-system
   (tooltip-mode -1)
@@ -120,10 +135,10 @@ If REPOSITORY is specified, use that."
         (x
 	 (menu-bar-lines . 1)
 	 (tool-bar-lines . nil)
-	 ;; ;; mouse
-	 ;; (mouse-wheel-mode . 1)
+	 ;; mouse
+	 (mouse-wheel-mode . 1)
 	 ;; (mouse-wheel-follow-mouse . t)
-	 ;; (mouse-avoidance-mode . 'exile)
+	 (mouse-avoidance-mode . 'exile)
 	 ;; face
 	 ;; (font . "文泉驿等宽微米黑 8")
 	 )
@@ -203,6 +218,37 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (global-set-key (kbd "M-s w x") 'swap-windows)
 (global-set-key (kbd "M-s w s") 'change-split)
 
+;;----------------------------------------------------------------------------
+;; When splitting window, show (other-buffer) in the new window
+;;----------------------------------------------------------------------------
+;; (defun split-window-func-with-other-buffer (split-function)
+;;   (lexical-let ((s-f split-function))
+;;     (lambda ()
+;;       (interactive)
+;;       (funcall s-f)
+;;       (set-window-buffer (next-window) (other-buffer)))))
+
+;; (global-set-key "\C-x2" (split-window-func-with-other-buffer 'split-window-vertically))
+;; (global-set-key "\C-x3" (split-window-func-with-other-buffer 'split-window-horizontally))
+
+;;----------------------------------------------------------------------------
+;; Rearrange split windows
+;;----------------------------------------------------------------------------
+;; (defun split-window-horizontally-instead ()
+;;   (interactive)
+;;   (save-excursion
+;;     (delete-other-windows)
+;;     (funcall (split-window-func-with-other-buffer 'split-window-horizontally))))
+
+;; (defun split-window-vertically-instead ()
+;;   (interactive)
+;;   (save-excursion
+;;     (delete-other-windows)
+;;     (funcall (split-window-func-with-other-buffer 'split-window-vertically))))
+
+;; (global-set-key "\C-x|" 'split-window-horizontally-instead)
+;; (global-set-key "\C-x_" 'split-window-vertically-instead)
+
 
 ;; modeline
 (my/package-install 'smart-mode-line)
@@ -229,7 +275,8 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 
 ;; (add-to-list 'auto-mode-alist '("routes$" . conf-space-mode))
 
-;; diminish to minimize the mode name to fewer text
+;; diminish
+;; to minimize the mode name to fewer text
 (my/package-install 'diminish)
 (use-package diminish
   :init
@@ -242,44 +289,18 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
     (diminish 'visual-line-mode)))
 
 ;; minibuffer
+;; type ‘C-M-e’ to go do your additions in a nice full buffer (with text mode) instead
 (my/package-install 'miniedit)
 (use-package miniedit
   :commands minibuffer-edit
   :init (miniedit-install))
+
 
 ;; speedbar
 ;; Start speedbar automatically if we're using a window system like X, etc
 ;; (when window-system
 ;;    (speedbar t))
 
-;; expand-region
-(my/package-install 'expand-region)
-(use-package expand-region
-  :bind ("C-=" . er/expand-region))
-
-;; helm/ido mode
-(my/package-install 'helm)
-(use-package helm
-  :init
-  (progn
-    (require 'helm-config)
-    (setq helm-candidate-number-limit 10)
-    ;; From https://gist.github.com/antifuchs/9238468
-    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-	  helm-input-idle-delay 0.01  ; this actually updates things
-					; relatively quickly.
-	  helm-quick-update t
-	  helm-M-x-requires-pattern nil
-	  helm-ff-skip-boring-files t)
-    (helm-mode))
-  :config
-  (progn
-    ;; I don't like the way switch-to-buffer uses history, since
-    ;; that confuses me when it comes to buffers I've already
-    ;; killed. Let's use ido instead.
-    (add-to-list 'helm-completing-read-handlers-alist '(switch-to-buffer . ido)))
-  :bind (("C-c h" . helm-mini)))
-(ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
 
 ;; undo tree
 ;; This lets you use C-x u (undo-tree-visualize) to visually walk
@@ -301,7 +322,7 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
   (setq guide-key/guide-key-sequence
         '("C-x" "C-x r" "C-x 4"
           "C-c" "C-c p" "C-c g"
-          "M-s"
+          "M-s" "M-s w"
           "C-h"))
   (guide-key-mode 1))
 
@@ -349,14 +370,6 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; (require 'find-dired)
 ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
 
-;; recent mode
-(my/package-install 'recentf)
-(use-package recentf
-  :init
-  (progn
-    (setq recentf-max-saved-items 200
-	  recentf-max-menu-items 15)
-    (recentf-mode t)))
 
 ;; yasnippet for make fast insert
 (my/package-install 'yasnippet)
@@ -366,10 +379,8 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
     (yas-global-mode 1)
     ))
 
-(my/package-install 'iedit)
-(use-package iedit)
 
-;; auto insert pairs 
+;; auto insert pairs
 (my/package-install 'smartparens)
 (use-package smartparens
   :init
@@ -380,6 +391,41 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (my/package-install 'rainbow-delimiters)
 (use-package rainbow-delimiters
   :init (global-rainbow-delimiters-mode))
+
+;; Highlight certain contents - by press C-;
+;; Edit one of the occurrences The change is applied to other occurrences simultaneously
+;; Finish - by pressing C-; again
+(my/package-install 'iedit)
+(use-package iedit)
+
+;; expand-region
+(my/package-install 'expand-region)
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
+
+;; helm/ido mode
+(my/package-install 'helm)
+(use-package helm
+  :init
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 10)
+    ;; From https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+	  helm-input-idle-delay 0.01  ; this actually updates things
+					; relatively quickly.
+	  helm-quick-update t
+	  helm-M-x-requires-pattern nil
+	  helm-ff-skip-boring-files t)
+    (helm-mode))
+  :config
+  (progn
+    ;; I don't like the way switch-to-buffer uses history, since
+    ;; that confuses me when it comes to buffers I've already
+    ;; killed. Let's use ido instead.
+    (add-to-list 'helm-completing-read-handlers-alist '(switch-to-buffer . ido))))
+(ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+
 
 ;; ido-mode is awesome. Let's make it awesomer.
 ;; I usually want to go to recently-opened files first.
@@ -410,6 +456,47 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 		  (lambda (x) (if (string-equal (substring x 0 1) ".") x))
 		  ido-temp-list))))))
 
+;; recent mode
+(my/package-install 'recentf)
+(use-package recentf
+  :init
+  (progn
+    (setq recentf-max-saved-items 200
+          recentf-exclude '("/tmp/"
+                            "/ssh:"
+                            "/sudo:"
+                            "/home/[a-z]\+/\\.")
+	  recentf-max-menu-items 15)
+    (recentf-mode t)))
+(setq recentf-keep '(file-remote-p file-readable-p))
+
+(defun file-name-with-one-directory (file-name)
+  (concat (cadr (reverse (split-string file-name "/"))) "/"
+          (file-name-nondirectory file-name)))
+
+(defun recentf--file-cons (file-name)
+  (cons (file-name-with-one-directory file-name) file-name))
+
+(defun recentf-ido-find-file ()
+  "Find a recent file using ido."
+  (interactive)
+  (let* ((recent-files (mapcar 'recentf--file-cons recentf-list))
+         (files (mapcar 'car recent-files))
+         (file (ido-completing-read "Choose recent file: " files))) ;philip add ido
+    (find-file (cdr (assoc file recent-files)))))
+
+;; ;; ido settings
+;; (defun ido-recentf-open ()
+;;   "Use `ido-completing-read' to \\[find-file] a recent file"
+;;   (interactive)
+;;   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+;;       (message "Opening file...")
+;;     (message "Aborting")))
+
+;; (global-set-key (kbd "C-x C-r") 'ido-recentf-open)
+;; (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
+
+
 ;; smex
 (my/package-install 'smex)
 (use-package smex
@@ -424,6 +511,8 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; (or (server-running-p)
 ;;     (server-start))
 
+(require 'rainbow-identifiers)
+;; (rainbow-identifiers-mode t)
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; misc
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -460,6 +549,11 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 
 ;; file association
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+
+(setq uniquify-buffer-name-style 'reverse)
+(setq uniquify-separator " • ")
+(setq uniquify-after-kill-buffer-p t)
+(setq uniquify-ignore-buffers-re "^\\*")
 
 ;; killing text
 (defadvice kill-region (before slick-cut activate compile)
@@ -513,8 +607,6 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "M-t s") 'transpose-sentences)
 (global-set-key (kbd "M-t p") 'transpose-paragraphs)
 
-
-
 ;; occur settings
 (defun occur-rename-buffer-after-search-string ()
   "Uniquify name of *Occur* buffer by appending search string to it."
@@ -530,17 +622,49 @@ point reaches the beginning or end of the buffer, stop there."
 (define-key occur-mode-map "p" 'occur-prev)
 
 
-;; ido settings
-(defun ido-recentf-open ()
-  "Use `ido-completing-read' to \\[find-file] a recent file"
+;;----------------------------------------------------------------------------
+;; Find the directory containing a given library
+;;----------------------------------------------------------------------------
+(autoload 'find-library-name "find-func")
+(defun directory-of-library (library-name)
+  "Return the directory in which the `LIBRARY-NAME' load file is found."
+  (file-name-as-directory (file-name-directory (find-library-name library-name))))
+
+
+;;----------------------------------------------------------------------------
+;; Delete the current file
+;;----------------------------------------------------------------------------
+(defun delete-this-file ()
+  "Delete the current file, and kill the buffer."
   (interactive)
-  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-      (message "Opening file...")
-    (message "Aborting")))
+  (or (buffer-file-name) (error "No file is currently being edited"))
+  (when (yes-or-no-p (format "Really delete '%s'?"
+                             (file-name-nondirectory buffer-file-name)))
+    (delete-file (buffer-file-name))
+    (kill-this-buffer)))
 
-(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
 
+;;----------------------------------------------------------------------------
+;; Rename the current file
+;;----------------------------------------------------------------------------
+(defun rename-this-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (unless filename
+      (error "Buffer '%s' is not visiting a file!" name))
+    (if (get-buffer new-name)
+        (message "A buffer named '%s' already exists!" new-name)
+      (progn
+        (rename-file filename new-name 1)
+        (rename-buffer new-name)
+        (set-visited-file-name new-name)
+        (set-buffer-modified-p nil)))))
 
+;; make grep buffer writable
+(require 'wgrep)
+(setq wgrep-enable-key "r")
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; programming
@@ -605,12 +729,34 @@ point reaches the beginning or end of the buffer, stop there."
           '(lambda ()
              (gtags-mode t)))
 
-(setq gtags-suggested-key-mapping t)
+(setq gtags-suggested-key-mapping t)    ;gtags key mapping
 (setq gtags-auto-update t)
 
 
+(require 'hippie-exp-ext)
+(global-set-key (kbd "C-@") 'hippie-expand-dabbrev-limited-chars)
+(global-set-key (kbd "M-/") 'hippie-expand-file-name)
+
+;; (autoload 'doxygen-insert-function-comment "doxygen" "insert comment for the function at point" t)
+;; (autoload 'doxygen-insert-file-comment "doxygen" "insert comment for file" t)
+;; (autoload 'doxygen-insert-member-group-region "doxygen" "insert comment for member group" t)
+;; (autoload 'doxygen-insert-compound-comment "doxygen" "insert comment for compound" t)
+
+(require 'highlight-symbol)
+(global-set-key (kbd "C-c h") nil)
+(global-set-key (kbd "C-c h l") 'highlight-symbol-at-point)
+(global-set-key (kbd "C-c h n") 'highlight-symbol-next)
+(global-set-key (kbd "C-c h p") 'highlight-symbol-prev)
+(global-set-key (kbd "C-c h r") 'highlight-symbol-query-replace)
 
 
+;; stardict
+(require 'sdcv-mode)
+(global-set-key (kbd "M-?") 'sdcv-search)
+
+;; ;; Display Emacs Startup Time
+;; (add-hook 'after-init-hook (lambda ()
+;;                              (growl-notify-notification "Emacs Startup" (format "The init sequence took %s." (emacs-init-time)))))
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; It's not the end. It's just the end of beginning ...
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
