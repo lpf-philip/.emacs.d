@@ -1,4 +1,5 @@
 (require 'package)
+(require 'dash)
 
 ;; add the path(always http) to fetch packages.
 (dolist (source '(("marmalade" . "http://marmalade-repo.org/packages/")

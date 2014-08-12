@@ -151,22 +151,20 @@ If REPOSITORY is specified, use that."
 	)
       )
 
-
+;; ------------------------------------------------------------
 ;; winner-->C-c <left> C-c <right>
-(my/package-install 'winner)
-(use-package winner
-  :config (winner-mode 1))
+;; ------------------------------------------------------------
+(require 'winner)
+(winner-mode 1)
 
-
+;; ------------------------------------------------------------
 ;; move among windows
-(my/package-install 'windmove)
-(use-package windmove
-  :bind
-  (("C-x C-<right>" . windmove-right)
-   ("C-x C-<left>" . windmove-left)
-   ("C-x C-<up>" . windmove-up)
-   ("C-x C-<down>" . windmove-down)))
-
+;; ------------------------------------------------------------
+(require 'windmove)
+(global-set-key (kbd "C-x C-<right>") 'windmove-right)
+(global-set-key (kbd "C-x C-<left>") 'windmove-left)
+(global-set-key (kbd "C-x C-<up>") 'windmove-up)
+(global-set-key (kbd "C-x C-<down>") 'windmove-down)
 
 ;; optmize window/buffer split
 (defun vsplit-last-buffer ()
@@ -288,6 +286,7 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
     (eval-after-load "eldoc" '(diminish 'eldoc-mode))
     (diminish 'visual-line-mode)))
 
+
 ;; minibuffer
 ;; type ‘C-M-e’ to go do your additions in a nice full buffer (with text mode) instead
 (my/package-install 'miniedit)
@@ -314,17 +313,27 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t)))
 
-;; It's hard to remember keyboard shortcuts. The guide-key package
-;; pops up help after a short delay.
+;; It's hard to remember keyboard shortcuts. The guide-key package pops up help after a short delay.
 (my/package-install 'guide-key)
-(use-package guide-key
-  :init
-  (setq guide-key/guide-key-sequence
-        '("C-x" "C-x r" "C-x 4"
-          "C-c" "C-c p" "C-c g"
-          "M-s" "M-s w"
-          "C-h"))
-  (guide-key-mode 1))
+;; (use-package guide-key
+;;   :init
+;;   (setq guide-key/guide-key-sequence
+;;         '("C-x" "C-x r" "C-x 4"
+;;           "C-c" "C-c p" "C-c g"
+;;           "M-s" "M-s w"
+;;           "C-h"))
+;;   (guide-key-mode 1))
+
+;; guide-key
+(require 'guide-key)
+(setq guide-key/guide-key-sequence
+      '("C-x" "C-x r" "C-x 4"
+        "C-c" "C-c p" "C-c g"
+        "M-s" "M-s w"
+        "C-h"))
+(guide-key-mode 1)
+(setq guide-key/recursive-key-sequence-flag t)
+(setq guide-key/popup-window-position 'right)
 
 ;; Openwith
 (my/package-install 'openwith)
@@ -496,16 +505,17 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; (global-set-key (kbd "C-x C-r") 'ido-recentf-open)
 ;; (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
 
-
-;; smex
-(my/package-install 'smex)
-(use-package smex
-  :init
-  (smex-initialize))
+;; ------------------------------------------------------------
+;; Smart M-x is smart
+;; ------------------------------------------------------------
+(require 'smex)
+(smex-initialize)
 
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "<menu>") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+
+
 
 ;; (require 'server)
 ;; (or (server-running-p)
@@ -701,9 +711,9 @@ point reaches the beginning or end of the buffer, stop there."
 (autoload 'gtags-mode "gtags" "" t)
 (add-hook 'gtags-mode-hook
           '(lambda ()
-                                        ; Local customization (overwrite key mapping)
-             (define-key gtags-mode-map "\C-f" 'scroll-up)
-             (define-key gtags-mode-map "\C-b" 'scroll-down)
+             ;;                            ; Local customization (overwrite key mapping)
+             ;; (define-key gtags-mode-map "\C-f" 'scroll-up)
+             ;; (define-key gtags-mode-map "\C-b" 'scroll-down)
              ))
 (add-hook 'gtags-select-mode-hook
           '(lambda ()
@@ -732,6 +742,39 @@ point reaches the beginning or end of the buffer, stop there."
 (setq gtags-suggested-key-mapping t)    ;gtags key mapping
 (setq gtags-auto-update t)
 
+;; (local-set-key (kbd "C-x C-o") 'ff-find-other-file)
+;; (local-set-key "\M-f" 'c-forward-into-nomenclature)
+;; (local-set-key "\M-b" 'c-backward-into-nomenclature)
+(setq cc-search-directories '("." "/usr/include" "/usr/local/include/*" "../*/include" "$WXWIN/include"))
+(setq c-basic-offset 4)
+(setq c-style-variables-are-local-p nil)
+;give me NO newline automatically after electric expressions are entered
+(setq c-auto-newline nil)
+;if (0) becomes if (0)
+; { {
+; ; ;
+; } }
+(c-set-offset 'substatement-open 0)
+;first arg of arglist to functions: tabbed in once
+;(default was c-lineup-arglist-intro-after-paren)
+(c-set-offset 'arglist-intro '+)
+;second line of arglist to functions: tabbed in once
+;(default was c-lineup-arglist)
+(c-set-offset 'arglist-cont-nonempty '+)
+;switch/case: make each case line indent from switch
+(c-set-offset 'case-label '+)
+;make the ENTER key indent next line properly
+(local-set-key "\C-m" 'newline-and-indent)
+;syntax-highlight aggressively
+;(setq font-lock-support-mode 'lazy-lock-mode)
+(setq lazy-lock-defer-contextually t)
+(setq lazy-lock-defer-time 0)
+;make DEL take all previous whitespace with it
+;; (c-toggle-hungry-state 1)
+;make open-braces after a case: statement indent to 0 (default was '+)
+(c-set-offset 'statement-case-open 0)
+;make a #define be left-aligned
+(setq c-electric-pound-behavior (quote (alignleft)))
 
 (require 'hippie-exp-ext)
 (global-set-key (kbd "C-@") 'hippie-expand-dabbrev-limited-chars)
