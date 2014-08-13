@@ -32,7 +32,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes (quote (solarized-dark)))
- '(custom-safe-themes (quote ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))))
+ '(custom-safe-themes (quote ("756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))))
 ;; (custom-set-faces
 ;;  ;; custom-set-faces was added by Custom.
 ;;  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -249,50 +249,48 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 
 
 ;; modeline
-(my/package-install 'smart-mode-line)
-(use-package smart-mode-line
-  :init
-  (progn
-    (setq-default
-     mode-line-format
-     '("%e"
-       mode-line-front-space
-       mode-line-mule-info
-       mode-line-client
-       mode-line-modified
-       mode-line-remote
-       mode-line-frame-identification
-       mode-line-buffer-identification
-       "   "
-       mode-line-position
-       (vc-mode vc-mode)
-       "  "
-       mode-line-modes
-       mode-line-misc-info
-       mode-line-end-spaces))))
+(require 'smart-mode-line)
+
+(sml/setup)
+(sml/apply-theme 'dark)
+;; (sml/apply-theme 'light)
+;; (sml/apply-theme 'respectful)
+
+;; (setq-default mode-line-format
+;;               '("%e"
+;;                 mode-line-front-space
+;;                 mode-line-mule-info
+;;                 mode-line-client
+;;                 mode-line-modified
+;;                 mode-line-remote
+;;                 mode-line-frame-identification
+;;                 mode-line-buffer-identification
+;;                 "   "
+;;                 mode-line-position
+;;                 (vc-mode vc-mode)
+;;                 "  "
+;;                 mode-line-modes
+;;                 mode-line-misc-info
+;;                 mode-line-end-spaces))
 
 ;; (add-to-list 'auto-mode-alist '("routes$" . conf-space-mode))
 
 ;; diminish
 ;; to minimize the mode name to fewer text
-(my/package-install 'diminish)
-(use-package diminish
-  :init
-  (progn
-    ;; (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
-    (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
-    (eval-after-load "smartparens" '(diminish 'smartparens-mode))
-    (eval-after-load "guide-key" '(diminish 'guide-key-mode))
-    (eval-after-load "eldoc" '(diminish 'eldoc-mode))
-    (diminish 'visual-line-mode)))
+(require 'diminish)
+
+(diminish 'abbrev-mode "Abv")
+(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+(eval-after-load "smartparens" '(diminish 'smartparens-mode))
+(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
 
 
 ;; minibuffer
 ;; type ‘C-M-e’ to go do your additions in a nice full buffer (with text mode) instead
-(my/package-install 'miniedit)
-(use-package miniedit
-  :commands minibuffer-edit
-  :init (miniedit-install))
+(require 'miniedit)
+(miniedit-install)
 
 
 ;; speedbar
@@ -305,26 +303,19 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; This lets you use C-x u (undo-tree-visualize) to visually walk
 ;; through the changes you've made, undo back to a certain point
 ;;(or redo), and go down different branches.
-(my/package-install 'undo-tree)
-(use-package undo-tree
-  :init
-  (progn
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
+;; (use-package undo-tree
+;;   :init
+;;   (progn
+;;     (global-undo-tree-mode)
+;;     (setq undo-tree-visualizer-timestamps t)
+;;     (setq undo-tree-visualizer-diff t)))
+(require 'undo-tree)
+(global-undo-tree-mode)
+(setq undo-tree-visualizer-timestamps t)
+(setq undo-tree-visualizer-diff t)
+
 
 ;; It's hard to remember keyboard shortcuts. The guide-key package pops up help after a short delay.
-(my/package-install 'guide-key)
-;; (use-package guide-key
-;;   :init
-;;   (setq guide-key/guide-key-sequence
-;;         '("C-x" "C-x r" "C-x 4"
-;;           "C-c" "C-c p" "C-c g"
-;;           "M-s" "M-s w"
-;;           "C-h"))
-;;   (guide-key-mode 1))
-
-;; guide-key
 (require 'guide-key)
 (setq guide-key/guide-key-sequence
       '("C-x" "C-x r" "C-x 4"
@@ -805,3 +796,9 @@ point reaches the beginning or end of the buffer, stop there."
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "It's not the end. It's just the end of beginning ...")
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
