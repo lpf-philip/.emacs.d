@@ -247,10 +247,12 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; (global-set-key "\C-x|" 'split-window-horizontally-instead)
 ;; (global-set-key "\C-x_" 'split-window-vertically-instead)
 
-
+;; ------------------------------------------------------------
 ;; modeline
-(require 'smart-mode-line)
+;; ------------------------------------------------------------
 
+;; sml
+(require 'smart-mode-line)
 (sml/setup)
 (sml/apply-theme 'dark)
 ;; (sml/apply-theme 'light)
@@ -275,10 +277,10 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 
 ;; (add-to-list 'auto-mode-alist '("routes$" . conf-space-mode))
 
+
 ;; diminish
 ;; to minimize the mode name to fewer text
 (require 'diminish)
-
 (diminish 'abbrev-mode "Abv")
 (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
 (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
@@ -286,8 +288,9 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (eval-after-load "guide-key" '(diminish 'guide-key-mode))
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
 
-
+;; ------------------------------------------------------------
 ;; minibuffer
+;; ------------------------------------------------------------
 ;; type ‘C-M-e’ to go do your additions in a nice full buffer (with text mode) instead
 (require 'miniedit)
 (miniedit-install)
@@ -299,104 +302,139 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;;    (speedbar t))
 
 
+;; ------------------------------------------------------------
+;; edit
+;; ------------------------------------------------------------
 ;; undo tree
 ;; This lets you use C-x u (undo-tree-visualize) to visually walk
 ;; through the changes you've made, undo back to a certain point
 ;;(or redo), and go down different branches.
-;; (use-package undo-tree
-;;   :init
-;;   (progn
-;;     (global-undo-tree-mode)
-;;     (setq undo-tree-visualizer-timestamps t)
-;;     (setq undo-tree-visualizer-diff t)))
 (require 'undo-tree)
 (global-undo-tree-mode)
 (setq undo-tree-visualizer-timestamps t)
 (setq undo-tree-visualizer-diff t)
 
+;; Browse-kill-ring - see what you've cut so that you can paste it
+(require 'browse-kill-ring)
+(browse-kill-ring-default-keybindings) ;; M-y
+(setq browse-kill-ring-quit-action 'save-and-restore)
 
+
+;; ------------------------------------------------------------
+;; guide-key for help
+;; ------------------------------------------------------------
 ;; It's hard to remember keyboard shortcuts. The guide-key package pops up help after a short delay.
 (require 'guide-key)
 (setq guide-key/guide-key-sequence
       '("C-x" "C-x r" "C-x 4"
         "C-c" "C-c p" "C-c g"
         "M-s" "M-s w"
+        "M-g"
         "C-h"))
 (guide-key-mode 1)
 (setq guide-key/recursive-key-sequence-flag t)
 (setq guide-key/popup-window-position 'right)
 
+
+;; ------------------------------------------------------------
 ;; Openwith
-(my/package-install 'openwith)
-(use-package openwith
-  :init
-  (openwith-mode t)
-  :config
-  (setq openwith-associations
-	(quote (("\\.\\(?:pdf\\|ps\\)\\'" "okular" (file))
-		("\\.\\(?:mp3\\|wav\\|flac\\)\\'" "gmusicbrowser" (file))
-		("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mov\\|mp4\\|ogg\\)\\'" "smplayer" (file))
-		;; ("\\.\\(?:jpe?g\\|png\\|bmp\\)\\'" "gwenview" (file))
-		("\\.chm\\'" "kchmviewer" (file))
-		("\\.\\(?:odt\\|doc\\|docx\\)\\'" "libreoffice" ("--writer" file))
-		("\\.\\(?:ods\\|xls\\|xlsx\\)\\'" "libreoffice" ("--calc" file))
-		("\\.\\(?:odp\\|pps\\|ppt\\|pptx\\)\\'" "libreoffice" ("--impress" file))
-		("\\.dia\\'" "dia" (file))))));; helm-swoop--a fast way to search things
-(my/package-install 'helm-swoop)
-(use-package helm-swoop
-  :bind (("C-S-s" . helm-swoop)))
+;; ------------------------------------------------------------
+(require 'openwith)
+(openwith-mode t)
+(setq openwith-associations
+      (quote (("\\.\\(?:pdf\\|ps\\)\\'" "okular" (file))
+              ("\\.\\(?:mp3\\|wav\\|flac\\)\\'" "gmusicbrowser" (file))
+              ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mov\\|mp4\\|ogg\\)\\'" "smplayer" (file))
+              ;; ("\\.\\(?:jpe?g\\|png\\|bmp\\)\\'" "gwenview" (file))
+              ("\\.chm\\'" "kchmviewer" (file))
+              ("\\.\\(?:odt\\|doc\\|docx\\)\\'" "libreoffice" ("--writer" file))
+              ("\\.\\(?:ods\\|xls\\|xlsx\\)\\'" "libreoffice" ("--calc" file))
+              ("\\.\\(?:odp\\|pps\\|ppt\\|pptx\\)\\'" "libreoffice" ("--impress" file))
+              ("\\.dia\\'" "dia" (file)))))
 
+
+
+;; ------------------------------------------------------------
+;; helm-swoop--a fast way to search things
+;; ------------------------------------------------------------
+(require 'helm)
+(require 'helm-swoop)
+
+(global-set-key (kbd "C-S-s") 'helm-swoop)
+(global-set-key (kbd "M-i") 'helm-swoop)
+(global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+;; (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+;; (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+
+;; When doing isearch, hand the word over to helm-swoop
+(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+
+;; ;; Save buffer when helm-multi-swoop-edit complete
+;; (setq helm-multi-swoop-edit-save t)
+
+;; ;; If this value is t, split window inside the current window
+;; (setq helm-swoop-split-with-multiple-windows nil)
+
+;; ;; Split direction. 'split-window-vertically or 'split-window-horizontally
+;; (setq helm-swoop-split-direction 'split-window-vertically)
+
+;; ;; If nil, you can slightly boost invoke speed in exchange for text color
+;; (setq helm-swoop-speed-or-color nil)
+
+;; Helm Swoop Edit
+;; While doing helm-swoop, press keybind [C-c C-e] to move to edit buffer.
+;; Edit the list and apply by [C-x C-s]. If you'd like to cancel, [C-c C-g]
+
+;; smartscan
+;; (define-key m (kbd "M-n") 'smartscan-symbol-go-forward)
+;; (define-key m (kbd "M-p") 'smartscan-symbol-go-backward)
+;; (define-key m (kbd "M-'") 'smartscan-symbol-replace)
+(require 'smartscan)
+(global-smartscan-mode 1)
+
+
+;; ------------------------------------------------------------
+;; grep
+;; ------------------------------------------------------------
 ;; grep-a-lot--mult grep buffer
-(my/package-install 'grep-a-lot)
-(use-package grep-a-lot
-  :init
-  (grep-a-lot-setup-keys))
-
-;; Browse-kill-ring - see what you've cut so that you can paste it
-(my/package-install 'browse-kill-ring)
-(use-package browse-kill-ring
-  :init
-  (progn
-    (browse-kill-ring-default-keybindings) ;; M-y
-    (setq browse-kill-ring-quit-action 'save-and-restore)))
-
-;; samrtscan
-(my/package-install 'smartscan)
-(use-package smartscan
-  :init (global-smartscan-mode t)
-  :bind (("M-n" . smartscan-symbol-go-forwar)
-	 ("M-p" . smartscan-symbol-go-backward)))
+;; M-g ]         Go to next search results buffer, restore its current search context
+;; M-g [         Ditto, but selects previous buffer.
+;; M-g -         Pop to previous search results buffer (kills top search results buffer)
+;; M-g _         Clear the search results stack (kills all grep-a-lot buffers!)
+;; M-g =         Restore buffer and position where current search started
+(require 'grep-a-lot)
+(grep-a-lot-setup-keys)
+;; (grep-a-lot-advise igrep)
 
 ;; (require 'find-dired)
 ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
 
 
 ;; yasnippet for make fast insert
-(my/package-install 'yasnippet)
-(use-package yasnippet
-  :init
-  (progn
-    (yas-global-mode 1)
-    ))
+(require 'yasnippet)
+(yas-global-mode 1)
+(my/package-install 'dropdown-list)
+(require 'dropdown-list)
+(setq yas-prompt-functions '(yas-dropdown-prompt
+                             yas-ido-prompt
+                             yas-completing-prompt))
 
 
 ;; auto insert pairs
-(my/package-install 'smartparens)
-(use-package smartparens
-  :init
-  (progn
-    (require 'smartparens-config)
-    (smartparens-global-mode t)))
+(require 'smartparens)
+(require 'smartparens-config)
+(smartparens-global-mode t)
 
-(my/package-install 'rainbow-delimiters)
-(use-package rainbow-delimiters
-  :init (global-rainbow-delimiters-mode))
+(require 'rainbow-delimiters)
+;; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(global-rainbow-delimiters-mode)
+
 
 ;; Highlight certain contents - by press C-;
 ;; Edit one of the occurrences The change is applied to other occurrences simultaneously
 ;; Finish - by pressing C-; again
-(my/package-install 'iedit)
-(use-package iedit)
+(require 'iedit)
 
 ;; expand-region
 (my/package-install 'expand-region)
