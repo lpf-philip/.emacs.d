@@ -1,44 +1,6 @@
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; fly in EMACS
+;; ;;;;;;;;;;;;;;;;;;;;;;;;; fly in emacs ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; http://pages.sachachua.com/.emacs.d/Sacha.html
-(setq emacs-load-start-time (current-time))
-
-;; (require 'setup-package)
-;; (require 'setup-backup-history)
-;; (require 'setup-window)
-;; (require 'setup-modeline)
-
-;; This sets up the load path so that we can override it
-(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
-;----------------------------------------------------------------------------
-; Functions (load all files in defuns-dir)
-; Copied from https://github.com/magnars/.emacs.d/blob/master/init.el
-;----------------------------------------------------------------------------
-;; (setq defuns-dir (expand-file-name "~/.emacs.d"))
-;; (dolist (file (directory-files defuns-dir t "\\w+"))
-;;   (when (file-regular-p file)
-;;       (load file)))
-
-(package-initialize)
-(setq package-enable-at-startup nil)
-
-;; (solarized-dark)
-;; (setq custom-enabled-themes (quote (solarized-dark)))
-;; (setq custom-safe-themes (quote ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (solarized-dark)))
- '(custom-safe-themes (quote ("756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "unknown" :family "DejaVu Sans Mono")))))
 
 
 
@@ -46,12 +8,70 @@
 ;; package management
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; add the path(always http) to fetch packages.
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t) ;t for add to the end of list
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-;; Always load newest byte code
-(setq load-prefer-newer t)
+(package-initialize nil)
 
+(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+
+;; add the path(always http) to fetch packages.
+(dolist (source '(("marmalade" . "http://marmalade-repo.org/packages/")
+                  ("melpa" . "http://melpa.milkbox.net/packages/")
+                  ("org" . "http://orgmode.org/elpa/")))
+  (add-to-list 'package-archives source t)) ; t for add to the end of list
+
+(package-initialize t)
+(setq package-enable-at-startup nil)
+
+;; informs Emacs about the latest versions of all packages
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; ;; All packages should be managed at here.
+;; (let ((packages '(
+;;                   ;; package manage
+;;                   use-package
+;;                   ;; window & buffer
+;;                   winner
+;;                   windmove
+;;                   ;; mode line
+;;                   smart-mode-line
+;;                   diminish
+;;                   ;; mini buffer
+;;                   miniedit              ;
+;;                   ;; key map
+;;                   guide-key
+;;                   ;; good further
+;;                   helm
+;;                   ido
+;;                   smex                  ;M-x interface with Ido-style fuzzy matching.
+;;                   ;; search
+;;                   helm-swoop
+;;                   grep-a-lot
+;;                   wgrep
+;;                   iedit                 ;Highlight certain contents.Edit multiple regions in the same way simultaneously.
+;;                   recentf
+;;                   openwith
+;;                   undo-tree
+;;                   browse-kill-ring
+;;                   smartscan
+;;                   smartparens
+;;                   rainbow-delimiters
+;;                   rainbow-identifiers
+;;                   highlight-symbol
+;;                   expand-region
+;;                   projectile
+;;                   helm-projectile
+;;                   hippie-exp-ext
+;;                   yasnippet
+;;                   )))
+;;   (dolist (package packages)
+;;     (let (
+;;           ;; (package-archives (if repository
+;; 	  ;;       		(list (assoc repository package-archives))
+;; 	  ;;       	      package-archives))
+;;           )
+;;       (package-install package))))
+
+;; allow single install
 (defun my/package-install (package &optional repository)
   "Install PACKAGE if it has not yet been installed.
 If REPOSITORY is specified, use that."
@@ -65,9 +85,6 @@ If REPOSITORY is specified, use that."
   (interactive)
   (byte-recompile-directory "~/.emacs.d" 0)
   (byte-recompile-directory "~/.emacs.d/elisp" 0))
-
-(my/package-install 'use-package)
-(require 'use-package)
 
 
 
@@ -95,8 +112,122 @@ If REPOSITORY is specified, use that."
 
 
 
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; color-theme
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (solarized-dark)
+;; (setq custom-enabled-themes (quote (solarized-dark)))
+;; (setq custom-safe-themes (quote ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes (quote (solarized-dark)))
+ '(custom-safe-themes (quote ("756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "unknown" :family "DejaVu Sans Mono")))))
+
+
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; windows management
+;; misc
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "C-c e") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+(define-key emacs-lisp-mode-map (kbd "M-s e b") 'eval-buffer)
+(define-key emacs-lisp-mode-map (kbd "M-s e r") 'eval-region)
+
+(fset 'yes-or-no-p 'y-or-n-p)		;replace yes/no with y/n
+(global-set-key (kbd "RET") 'newline-and-indent)
+
+(show-paren-mode t)
+(icomplete-mode 1)
+
+(delete-selection-mode t)		;delete the selection with a keypress
+;; (set-cursor-color "#FF5A0E")		;cursor color is orange
+(setq-default indent-tabs-mode nil) ;; don't use tabs to indent
+(setq-default tab-width 8)	    ;; but maintain correct appearance
+(setq dired-recursive-copies (quote always))
+
+(setq uniquify-buffer-name-style (quote post-forward))
+;; (setq uniquify-buffer-name-style 'reverse)
+(setq uniquify-separator " • ")
+(setq uniquify-after-kill-buffer-p t)
+(setq uniquify-ignore-buffers-re "^\\*")
+
+(global-set-key (kbd "C-x p") 'pop-to-mark-command)	;goto previous mark position
+(setq set-mark-command-repeat-pop t)
+
+;; ------------------------------------------------------------
+;; emacs garbage collection system settings
+;; ------------------------------------------------------------
+;; reduce the frequency of garbage collection by making it happen on
+;; each 50MB of allocated data (the default is on every 0.76MB)
+(setq gc-cons-threshold 50000000)
+;; warn when opening files bigger than 100MB
+(setq large-file-warning-threshold 100000000)
+
+;; ------------------------------------------------------------
+;; text size
+;; ------------------------------------------------------------
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+
+;; ------------------------------------------------------------
+;; codeing system
+;; ------------------------------------------------------------
+(prefer-coding-system 'utf-8)
+(when (display-graphic-p)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+
+;; ------------------------------------------------------------
+;; file association
+;; ------------------------------------------------------------
+(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+
+
+;; ------------------------------------------------------------
+;; Openwith
+;; ------------------------------------------------------------
+(require 'openwith)
+(openwith-mode t)
+(setq openwith-associations
+      (quote (("\\.\\(?:pdf\\|ps\\)\\'" "okular" (file))
+              ("\\.\\(?:mp3\\|wav\\|flac\\)\\'" "gmusicbrowser" (file))
+              ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mov\\|mp4\\|ogg\\)\\'" "smplayer" (file))
+              ;; ("\\.\\(?:jpe?g\\|png\\|bmp\\)\\'" "gwenview" (file))
+              ("\\.chm\\'" "kchmviewer" (file))
+              ("\\.\\(?:odt\\|doc\\|docx\\)\\'" "libreoffice" ("--writer" file))
+              ("\\.\\(?:ods\\|xls\\|xlsx\\)\\'" "libreoffice" ("--calc" file))
+              ("\\.\\(?:odp\\|pps\\|ppt\\|pptx\\)\\'" "libreoffice" ("--impress" file))
+              ("\\.dia\\'" "dia" (file)))))
+
+
+;; ------------------------------------------------------------
+;; guide-key - keyboard shortcuts. lazy boy
+;; ------------------------------------------------------------
+(require 'guide-key)
+(setq guide-key/guide-key-sequence
+      '("C-x" "C-x r" "C-x 4"
+        "C-c" "C-c p" "C-c g"
+        "M-s" "M-s w"
+        "M-g"
+        "C-h"))
+(guide-key-mode 1)
+(setq guide-key/recursive-key-sequence-flag t)
+(setq guide-key/popup-window-position 'right)
+
+
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; appearence management
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when window-system
@@ -133,7 +264,7 @@ If REPOSITORY is specified, use that."
       '(
         ;; if frame created on x display
         (x
-	 (menu-bar-lines . 1)
+	 (menu-bar-lines . nil)
 	 (tool-bar-lines . nil)
 	 ;; mouse
 	 (mouse-wheel-mode . 1)
@@ -147,15 +278,54 @@ If REPOSITORY is specified, use that."
 	 (menu-bar-lines . 0) (tool-bar-lines . 0)
 	 ;; (background-color . "black")
 	 ;; (foreground-color . "white")
-	 )
-	)
-      )
+	 )))
+
+
+;; ------------------------------------------------------------
+;; linum-mode
+;; ------------------------------------------------------------
+(global-linum-mode t)
+
+;; http://stackoverflow.com/questions/3875213/turning-on-linum-mode-when-in-python-c-mode
+(setq linum-mode-inhibit-modes-list '(eshell-mode
+                                      shell-mode
+                                      erc-mode
+                                      help-mode
+                                      jabber-roster-mode
+                                      jabber-chat-mode
+                                      twittering-mode
+                                      compilation-mode
+                                      weibo-timeline-mode
+                                      woman-mode
+                                      Info-mode
+                                      calc-mode
+                                      calc-trail-mode
+                                      comint-mode
+                                      gnus-group-mode
+                                      inf-ruby-mode
+                                      gud-mode
+                                      org-mode
+                                      vc-git-log-edit-mode
+                                      log-edit-mode
+                                      term-mode
+                                      w3m-mode
+                                      speedbar-mode
+                                      gnus-summary-mode
+                                      gnus-article-mode
+                                      calendar-mode))
+(defadvice linum-on (around linum-on-inhibit-for-modes)
+  "Stop the load of linum-mode for some major modes."
+  (unless (member major-mode linum-mode-inhibit-modes-list)
+    ad-do-it))
+(ad-activate 'linum-on)
+
 
 ;; ------------------------------------------------------------
 ;; winner-->C-c <left> C-c <right>
 ;; ------------------------------------------------------------
 (require 'winner)
 (winner-mode 1)
+
 
 ;; ------------------------------------------------------------
 ;; move among windows
@@ -166,14 +336,14 @@ If REPOSITORY is specified, use that."
 (global-set-key (kbd "C-x C-<up>") 'windmove-up)
 (global-set-key (kbd "C-x C-<down>") 'windmove-down)
 
+
 ;; optmize window/buffer split
 (defun vsplit-last-buffer ()
   (interactive)
-  (split-window-vetically)
+  (split-window-vertically)
   (other-window 1 nil)
   (switch-to-next-buffer)
   )
-
 (defun hsplit-last-buffer ()
   (interactive)
   (split-window-horizontally)
@@ -216,70 +386,29 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (global-set-key (kbd "M-s w x") 'swap-windows)
 (global-set-key (kbd "M-s w s") 'change-split)
 
-;;----------------------------------------------------------------------------
-;; When splitting window, show (other-buffer) in the new window
-;;----------------------------------------------------------------------------
-;; (defun split-window-func-with-other-buffer (split-function)
-;;   (lexical-let ((s-f split-function))
-;;     (lambda ()
-;;       (interactive)
-;;       (funcall s-f)
-;;       (set-window-buffer (next-window) (other-buffer)))))
 
-;; (global-set-key "\C-x2" (split-window-func-with-other-buffer 'split-window-vertically))
-;; (global-set-key "\C-x3" (split-window-func-with-other-buffer 'split-window-horizontally))
+(require 'window-number)
+(window-number-mode 1)
 
-;;----------------------------------------------------------------------------
-;; Rearrange split windows
-;;----------------------------------------------------------------------------
-;; (defun split-window-horizontally-instead ()
-;;   (interactive)
-;;   (save-excursion
-;;     (delete-other-windows)
-;;     (funcall (split-window-func-with-other-buffer 'split-window-horizontally))))
 
-;; (defun split-window-vertically-instead ()
-;;   (interactive)
-;;   (save-excursion
-;;     (delete-other-windows)
-;;     (funcall (split-window-func-with-other-buffer 'split-window-vertically))))
 
-;; (global-set-key "\C-x|" 'split-window-horizontally-instead)
-;; (global-set-key "\C-x_" 'split-window-vertically-instead)
-
-;; ------------------------------------------------------------
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; modeline
-;; ------------------------------------------------------------
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; sml
+;; ------------------------------------------------------------
+;; sml - beauty mode line
+;; ------------------------------------------------------------
 (require 'smart-mode-line)
 (sml/setup)
 (sml/apply-theme 'dark)
 ;; (sml/apply-theme 'light)
 ;; (sml/apply-theme 'respectful)
 
-;; (setq-default mode-line-format
-;;               '("%e"
-;;                 mode-line-front-space
-;;                 mode-line-mule-info
-;;                 mode-line-client
-;;                 mode-line-modified
-;;                 mode-line-remote
-;;                 mode-line-frame-identification
-;;                 mode-line-buffer-identification
-;;                 "   "
-;;                 mode-line-position
-;;                 (vc-mode vc-mode)
-;;                 "  "
-;;                 mode-line-modes
-;;                 mode-line-misc-info
-;;                 mode-line-end-spaces))
 
-;; (add-to-list 'auto-mode-alist '("routes$" . conf-space-mode))
-
-
-;; diminish
-;; to minimize the mode name to fewer text
+;; ------------------------------------------------------------
+;; diminish - to minimize the mode name to fewer text
+;; ------------------------------------------------------------
 (require 'diminish)
 (diminish 'abbrev-mode "Abv")
 (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
@@ -288,24 +417,56 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (eval-after-load "guide-key" '(diminish 'guide-key-mode))
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
 
-;; ------------------------------------------------------------
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; minibuffer
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; ------------------------------------------------------------
-;; type ‘C-M-e’ to go do your additions in a nice full buffer (with text mode) instead
+;; miniedit - edit minibuffer in full buffer: 'C-M-e'
+;; ------------------------------------------------------------
 (require 'miniedit)
 (miniedit-install)
 
 
-;; speedbar
-;; Start speedbar automatically if we're using a window system like X, etc
-;; (when window-system
-;;    (speedbar t))
+;; ------------------------------------------------------------
+;; Smart M-x is smart
+;; ------------------------------------------------------------
+(require 'smex)
+;; (autoload 'smex "smex" nil t)
+(smex-initialize)
+
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "<menu>") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+
+
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; buffer
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; ------------------------------------------------------------
+;; iedit - highlight/edit certain contents - by press C-;
+;; ------------------------------------------------------------
+;; Highlight certain contents - by press C-;
+;; Edit one of the occurrences The change is applied to other occurrences simultaneously
+;; Finish - by pressing C-; again
+(require 'iedit)
+
+;; ------------------------------------------------------------
+;; expand-region
+;; ------------------------------------------------------------
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+(require 'hippie-exp-ext)
+(global-set-key (kbd "C-@") 'hippie-expand-dabbrev-limited-chars)
+(global-set-key (kbd "M-/") 'hippie-expand-file-name)
 
 
 ;; ------------------------------------------------------------
-;; edit
+;; undo-tree
 ;; ------------------------------------------------------------
-;; undo tree
 ;; This lets you use C-x u (undo-tree-visualize) to visually walk
 ;; through the changes you've made, undo back to a certain point
 ;;(or redo), and go down different branches.
@@ -314,84 +475,125 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (setq undo-tree-visualizer-timestamps t)
 (setq undo-tree-visualizer-diff t)
 
+;; ------------------------------------------------------------
 ;; Browse-kill-ring - see what you've cut so that you can paste it
+;; ------------------------------------------------------------
 (require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings) ;; M-y
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 
-;; ------------------------------------------------------------
-;; guide-key for help
-;; ------------------------------------------------------------
-;; It's hard to remember keyboard shortcuts. The guide-key package pops up help after a short delay.
-(require 'guide-key)
-(setq guide-key/guide-key-sequence
-      '("C-x" "C-x r" "C-x 4"
-        "C-c" "C-c p" "C-c g"
-        "M-s" "M-s w"
-        "M-g"
-        "C-h"))
-(guide-key-mode 1)
-(setq guide-key/recursive-key-sequence-flag t)
-(setq guide-key/popup-window-position 'right)
 
 
 ;; ------------------------------------------------------------
-;; Openwith
+;; helm mode
 ;; ------------------------------------------------------------
-(require 'openwith)
-(openwith-mode t)
-(setq openwith-associations
-      (quote (("\\.\\(?:pdf\\|ps\\)\\'" "okular" (file))
-              ("\\.\\(?:mp3\\|wav\\|flac\\)\\'" "gmusicbrowser" (file))
-              ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mov\\|mp4\\|ogg\\)\\'" "smplayer" (file))
-              ;; ("\\.\\(?:jpe?g\\|png\\|bmp\\)\\'" "gwenview" (file))
-              ("\\.chm\\'" "kchmviewer" (file))
-              ("\\.\\(?:odt\\|doc\\|docx\\)\\'" "libreoffice" ("--writer" file))
-              ("\\.\\(?:ods\\|xls\\|xlsx\\)\\'" "libreoffice" ("--calc" file))
-              ("\\.\\(?:odp\\|pps\\|ppt\\|pptx\\)\\'" "libreoffice" ("--impress" file))
-              ("\\.dia\\'" "dia" (file)))))
+(require 'helm)
+(require 'helm-config)
+(setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+      helm-input-idle-delay 0.01  ; this actually updates things
+					; relatively quickly.
+      helm-quick-update t
+      helm-M-x-requires-pattern nil
+      helm-ff-skip-boring-files t)
+(helm-mode)
+;; I don't like the way switch-to-buffer uses history, since
+;; that confuses me when it comes to buffers I've already
+;; killed. Let's use ido instead.
+(add-to-list 'helm-completing-read-handlers-alist '(switch-to-buffer . ido))
+;; (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
 
+
+;; ------------------------------------------------------------
+;; ido-mode is awesome. Let's make it awesomer.
+;; ------------------------------------------------------------
+(require 'ido)
+(ido-mode (quote both))
+(setq ido-everywhere t)
+(setq ido-enable-flex-matching t)
+(setq ido-max-directory-size 100000)
+(setq ido-default-buffer-method 'selected-window)
+(setq ido-auto-merge-work-directories-length 0)
+(setq ido-use-filename-at-point nil)
+(setq ido-use-virtual-buffers t)
+;; Allow the same buffer to be open in different frames
+(setq ido-default-buffer-method 'selected-window)
+
+
+;; Use C-f during file selection to switch to regular find-file
+(require 'ido-ubiquitous)
+
+;; ------------------------------------------------------------
+;; recent mode
+;; ------------------------------------------------------------
+(require 'recentf)
+(setq recentf-max-saved-items 200
+      recentf-exclude '("/tmp/"
+                        "/ssh:"
+                        "/sudo:"
+                        "/home/[a-z]\+/\\.")
+      recentf-max-menu-items 15)
+(recentf-mode t)
+(setq recentf-keep '(file-remote-p file-readable-p))
+(defun file-name-with-one-directory (file-name)
+  (concat (cadr (reverse (split-string file-name "/"))) "/"
+          (file-name-nondirectory file-name)))
+(defun recentf--file-cons (file-name)
+  (cons (file-name-with-one-directory file-name) file-name))
+(defun recentf-ido-find-file ()
+  "Find a recent file using ido."
+  (interactive)
+  (let* ((recent-files (mapcar 'recentf--file-cons recentf-list))
+         (files (mapcar 'car recent-files))
+         (file (ido-completing-read "Choose recent file: " files))) ;philip add ido
+    (find-file (cdr (assoc file recent-files)))))
+
+(global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
 
 
 ;; ------------------------------------------------------------
 ;; helm-swoop--a fast way to search things
 ;; ------------------------------------------------------------
-(require 'helm)
 (require 'helm-swoop)
-
 (global-set-key (kbd "C-S-s") 'helm-swoop)
 (global-set-key (kbd "M-i") 'helm-swoop)
 (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
 ;; (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
 ;; (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
-
 ;; When doing isearch, hand the word over to helm-swoop
 (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
 (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
-
 ;; ;; Save buffer when helm-multi-swoop-edit complete
 ;; (setq helm-multi-swoop-edit-save t)
-
 ;; ;; If this value is t, split window inside the current window
 ;; (setq helm-swoop-split-with-multiple-windows nil)
-
 ;; ;; Split direction. 'split-window-vertically or 'split-window-horizontally
 ;; (setq helm-swoop-split-direction 'split-window-vertically)
-
 ;; ;; If nil, you can slightly boost invoke speed in exchange for text color
 ;; (setq helm-swoop-speed-or-color nil)
-
 ;; Helm Swoop Edit
 ;; While doing helm-swoop, press keybind [C-c C-e] to move to edit buffer.
 ;; Edit the list and apply by [C-x C-s]. If you'd like to cancel, [C-c C-g]
 
+
 ;; smartscan
-;; (define-key m (kbd "M-n") 'smartscan-symbol-go-forward)
-;; (define-key m (kbd "M-p") 'smartscan-symbol-go-backward)
-;; (define-key m (kbd "M-'") 'smartscan-symbol-replace)
 (require 'smartscan)
 (global-smartscan-mode 1)
+
+
+;; occur settings
+(defun occur-rename-buffer-after-search-string ()
+  "Uniquify name of *Occur* buffer by appending search string to it."
+  (let* ((beg-end (match-data (string-match "\".+\"" (buffer-string))))
+         (beg (+ (car beg-end) 2))
+         (end (cadr beg-end))
+         (search-string (buffer-substring-no-properties beg end)))
+    (rename-buffer (format "*Occur-%s*" search-string))))
+
+(add-hook 'occur-hook 'occur-rename-buffer-after-search-string)
+
+(define-key occur-mode-map "n" 'occur-next)
+(define-key occur-mode-map "p" 'occur-prev)
 
 
 ;; ------------------------------------------------------------
@@ -407,11 +609,16 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (grep-a-lot-setup-keys)
 ;; (grep-a-lot-advise igrep)
 
+;; make grep buffer writable
+(require 'wgrep)
+(setq wgrep-enable-key "r")
+
 ;; (require 'find-dired)
 ;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
 
-
-;; yasnippet for make fast insert
+;; ------------------------------------------------------------
+;; yasnippet for make fast inser
+;; ------------------------------------------------------------
 (require 'yasnippet)
 (yas-global-mode 1)
 (my/package-install 'dropdown-list)
@@ -419,6 +626,20 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (setq yas-prompt-functions '(yas-dropdown-prompt
                              yas-ido-prompt
                              yas-completing-prompt))
+
+
+;; ------------------------------------------------------------
+;; company
+;; ------------------------------------------------------------
+(require 'company)
+(autoload 'company-mode "company" nil t)
+(add-hook 'prog-mode-hook 'global-company-mode)
+(global-set-key (kbd "C-c o") 'company-complete)
+(setq company-require-match nil)
+;; (setq company-dabbrev-downcase nil)
+(setq company-show-numbers t)           ;first ten candiate
+;; (setq company-idle-delay 0.2)
+;; (setq company-clang-insert-arguments nil)
 
 
 ;; auto insert pairs
@@ -429,170 +650,9 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (require 'rainbow-delimiters)
 ;; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (global-rainbow-delimiters-mode)
-
-
-;; Highlight certain contents - by press C-;
-;; Edit one of the occurrences The change is applied to other occurrences simultaneously
-;; Finish - by pressing C-; again
-(require 'iedit)
-
-;; expand-region
-(my/package-install 'expand-region)
-(use-package expand-region
-  :bind ("C-=" . er/expand-region))
-
-;; helm/ido mode
-(my/package-install 'helm)
-(use-package helm
-  :init
-  (progn
-    (require 'helm-config)
-    ;; (setq helm-candidate-number-limit 10)
-    ;; From https://gist.github.com/antifuchs/9238468
-    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-	  helm-input-idle-delay 0.01  ; this actually updates things
-					; relatively quickly.
-	  helm-quick-update t
-	  helm-M-x-requires-pattern nil
-	  helm-ff-skip-boring-files t)
-    (helm-mode))
-  :config
-  (progn
-    ;; I don't like the way switch-to-buffer uses history, since
-    ;; that confuses me when it comes to buffers I've already
-    ;; killed. Let's use ido instead.
-    (add-to-list 'helm-completing-read-handlers-alist '(switch-to-buffer . ido))))
-(ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
-
-
-;; ido-mode is awesome. Let's make it awesomer.
-;; I usually want to go to recently-opened files first.
-(my/package-install 'ido)
-(use-package ido
-  :init
-  (progn
-    ;; (ido-mode 1)
-    ;; (ido-mode (quote both) nil (ido))
-    (ido-mode (quote both))
-    (setq ido-everywhere t)
-    (setq ido-enable-flex-matching t)
-    (setq ido-max-directory-size 100000)
-    (setq ido-default-buffer-method 'selected-window)
-    ;; (add-hook 'ido-make-file-list-hook 'ido-sort-mtime)
-    ;; (add-hook 'ido-make-dir-list-hook 'ido-sort-mtime)
-    (defun ido-sort-mtime ()
-      (setq ido-temp-list
-	    (sort ido-temp-list
-		  (lambda (a b)
-		    (let ((ta (nth 5 (file-attributes (concat ido-current-directory a))))
-			  (tb (nth 5 (file-attributes (concat ido-current-directory b)))))
-		      (if (= (nth 0 ta) (nth 0 tb))
-			  (> (nth 1 ta) (nth 1 tb))
-			(> (nth 0 ta) (nth 0 tb)))))))
-      (ido-to-end  ;; move . files to end (again)
-       (delq nil (mapcar
-		  (lambda (x) (if (string-equal (substring x 0 1) ".") x))
-		  ido-temp-list))))))
-
-;; recent mode
-(my/package-install 'recentf)
-(use-package recentf
-  :init
-  (progn
-    (setq recentf-max-saved-items 200
-          recentf-exclude '("/tmp/"
-                            "/ssh:"
-                            "/sudo:"
-                            "/home/[a-z]\+/\\.")
-	  recentf-max-menu-items 15)
-    (recentf-mode t)))
-(setq recentf-keep '(file-remote-p file-readable-p))
-
-(defun file-name-with-one-directory (file-name)
-  (concat (cadr (reverse (split-string file-name "/"))) "/"
-          (file-name-nondirectory file-name)))
-
-(defun recentf--file-cons (file-name)
-  (cons (file-name-with-one-directory file-name) file-name))
-
-(defun recentf-ido-find-file ()
-  "Find a recent file using ido."
-  (interactive)
-  (let* ((recent-files (mapcar 'recentf--file-cons recentf-list))
-         (files (mapcar 'car recent-files))
-         (file (ido-completing-read "Choose recent file: " files))) ;philip add ido
-    (find-file (cdr (assoc file recent-files)))))
-
-;; ;; ido settings
-;; (defun ido-recentf-open ()
-;;   "Use `ido-completing-read' to \\[find-file] a recent file"
-;;   (interactive)
-;;   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-;;       (message "Opening file...")
-;;     (message "Aborting")))
-
-;; (global-set-key (kbd "C-x C-r") 'ido-recentf-open)
-;; (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
-
-;; ------------------------------------------------------------
-;; Smart M-x is smart
-;; ------------------------------------------------------------
-(require 'smex)
-(smex-initialize)
-
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "<menu>") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-
-
-
-;; (require 'server)
-;; (or (server-running-p)
-;;     (server-start))
-
 (require 'rainbow-identifiers)
 ;; (rainbow-identifiers-mode t)
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; misc
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(global-set-key (kbd "C-c e") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
-(define-key emacs-lisp-mode-map (kbd "M-s e b") 'eval-buffer)
-(define-key emacs-lisp-mode-map (kbd "M-s e r") 'eval-region)
-(fset 'yes-or-no-p 'y-or-n-p)		;replace yes/no with y/n
-(setq uniquify-buffer-name-style (quote post-forward))
-(show-paren-mode t)
-(icomplete-mode 1)
-(setq dired-recursive-copies (quote always))
-(setq tab-width 4)
-(global-set-key (kbd "RET") 'newline-and-indent)
-(delete-selection-mode t)		;delete the selection with a keypress
-;; (set-cursor-color "#FF5A0E")		;cursor color is orange
-(setq-default indent-tabs-mode nil) ;; don't use tabs to indent
-(setq-default tab-width 8)	    ;; but maintain correct appearance
-
-;; reduce the frequency of garbage collection by making it happen on
-;; each 50MB of allocated data (the default is on every 0.76MB)
-(setq gc-cons-threshold 50000000)
-;; warn when opening files bigger than 100MB
-(setq large-file-warning-threshold 100000000)
-
-;; text size
-(bind-key "C-+" 'text-scale-increase)
-(bind-key "C--" 'text-scale-decrease)
-
-;; codeing system
-(prefer-coding-system 'utf-8)
-(when (display-graphic-p)
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
-
-;; file association
-(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-
-(setq uniquify-buffer-name-style 'reverse)
-(setq uniquify-separator " • ")
-(setq uniquify-after-kill-buffer-p t)
-(setq uniquify-ignore-buffers-re "^\\*")
 
 ;; killing text
 (defadvice kill-region (before slick-cut activate compile)
@@ -601,8 +661,7 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
    (if mark-active (list (region-beginning) (region-end))
      (list (line-beginning-position)
 	   (line-beginning-position 2)))))
-(bind-key "C-x p" 'pop-to-mark-command)	;goto previous mark position
-(setq set-mark-command-repeat-pop t)
+
 
 ;; smarter-move-beginning-of-line
 (defun smarter-move-beginning-of-line (arg)
@@ -630,14 +689,15 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key [remap move-beginning-of-line]
 		'smarter-move-beginning-of-line)
 
-;; (my/package-install 'multiple-cursors)
 ;; (use-package multiple-cursors
 ;;   :bind
 ;;    (("C->" . mc/mark-next-like-this)
 ;;     ("C-<" . mc/mark-previous-like-this)
 ;;     ("C-*" . mc/mark-all-like-this)))
 
+;; ------------------------------------------------------------
 ;; tranpose
+;; ------------------------------------------------------------
 (global-set-key (kbd "M-t") nil) ;; Remove the old keybinding
 (global-set-key (kbd "M-t c") 'transpose-chars)
 (global-set-key (kbd "M-t w") 'transpose-words)
@@ -646,95 +706,33 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "M-t s") 'transpose-sentences)
 (global-set-key (kbd "M-t p") 'transpose-paragraphs)
 
-;; occur settings
-(defun occur-rename-buffer-after-search-string ()
-  "Uniquify name of *Occur* buffer by appending search string to it."
-  (let* ((beg-end (match-data (string-match "\".+\"" (buffer-string))))
-         (beg (+ (car beg-end) 2))
-         (end (cadr beg-end))
-         (search-string (buffer-substring-no-properties beg end)))
-    (rename-buffer (format "*Occur-%s*" search-string))))
 
-(add-hook 'occur-hook 'occur-rename-buffer-after-search-string)
-
-(define-key occur-mode-map "n" 'occur-next)
-(define-key occur-mode-map "p" 'occur-prev)
+;; ------------------------------------------------------------
+;; highlight
+;; ------------------------------------------------------------
+(require 'highlight-symbol)
+(global-set-key (kbd "C-c h") nil)
+(global-set-key (kbd "C-c h l") 'highlight-symbol-at-point)
+(global-set-key (kbd "C-c h n") 'highlight-symbol-next)
+(global-set-key (kbd "C-c h p") 'highlight-symbol-prev)
+(global-set-key (kbd "C-c h r") 'highlight-symbol-query-replace)
 
 
-;;----------------------------------------------------------------------------
-;; Find the directory containing a given library
-;;----------------------------------------------------------------------------
-(autoload 'find-library-name "find-func")
-(defun directory-of-library (library-name)
-  "Return the directory in which the `LIBRARY-NAME' load file is found."
-  (file-name-as-directory (file-name-directory (find-library-name library-name))))
+;; ------------------------------------------------------------
+;; dictionary -- stardict
+;; ------------------------------------------------------------
+(require 'sdcv-mode)
+(global-set-key (kbd "M-?") 'sdcv-search)
 
 
-;;----------------------------------------------------------------------------
-;; Delete the current file
-;;----------------------------------------------------------------------------
-(defun delete-this-file ()
-  "Delete the current file, and kill the buffer."
-  (interactive)
-  (or (buffer-file-name) (error "No file is currently being edited"))
-  (when (yes-or-no-p (format "Really delete '%s'?"
-                             (file-name-nondirectory buffer-file-name)))
-    (delete-file (buffer-file-name))
-    (kill-this-buffer)))
-
-
-;;----------------------------------------------------------------------------
-;; Rename the current file
-;;----------------------------------------------------------------------------
-(defun rename-this-file-and-buffer (new-name)
-  "Renames both current buffer and file it's visiting to NEW-NAME."
-  (interactive "sNew name: ")
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
-    (unless filename
-      (error "Buffer '%s' is not visiting a file!" name))
-    (if (get-buffer new-name)
-        (message "A buffer named '%s' already exists!" new-name)
-      (progn
-        (rename-file filename new-name 1)
-        (rename-buffer new-name)
-        (set-visited-file-name new-name)
-        (set-buffer-modified-p nil)))))
-
-;; make grep buffer writable
-(require 'wgrep)
-(setq wgrep-enable-key "r")
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; programming
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq projectile-keymap-prefix (kbd "C-c p"))
-(my/package-install 'projectile)
-(use-package projectile
-  :init
-  (progn
-    (projectile-global-mode)
-    (setq projectile-completion-system 'default)
-    (setq projectile-enable-caching t)))
-(my/package-install 'helm-projectile)
-(use-package helm-projectile)
-
 ;; Don't show whitespace in diff, but show context
 (setq vc-diff-switches '("-b" "-B" "-u"))
 (which-function-mode 1)
-
-;; lisp
-(setq edebug-trace t)			;edebug trace function
-(autoload 'turn-on-eldoc-mode "eldoc" nil t)
-(defun my/set-up-emacs-lisp-mode ()
-  "Set up some conveniences for Emacs Lisp."
-  (turn-on-eldoc-mode)
-  (local-set-key (kbd "C-c f") 'find-function)
-  (define-key emacs-lisp-mode-map (kbd "C-c .") 'find-function-at-point))
-(add-hook 'emacs-lisp-mode-hook 'my/set-up-emacs-lisp-mode)
-(add-hook 'lisp-interaction-mode-hook 'my/set-up-emacs-lisp-mode)
-(add-hook 'ielm-mode-hook 'my/set-up-emacs-lisp-mode)
 
 ;; gtags
 (autoload 'gtags-mode "gtags" "" t)
@@ -749,27 +747,44 @@ point reaches the beginning or end of the buffer, stop there."
              (setq hl-line-face 'underline)
              (hl-line-mode 1)
              ))
-(defun my/gtags-mode
-  (lambda ()
-    (gtags-mode t)))
-(add-hook 'c-mode-hook
-          '(lambda ()
-             (gtags-mode t)))
-(add-hook 'c++-mode-hook
-          '(lambda ()
-             (gtags-mode t)))
-(add-hook 'java-mode-hook
-          '(lambda ()
-             (gtags-mode t)))
-(add-hook 'asm-mode-hook
-          '(lambda ()
-             (gtags-mode t)))
-(add-hook 'makefile-mode-hook
-          '(lambda ()
-             (gtags-mode t)))
-
+(add-hook 'c-mode-hook '(lambda () (gtags-mode t)))
+(add-hook 'c++-mode-hook '(lambda () (gtags-mode t)))
+(add-hook 'java-mode-hook '(lambda () (gtags-mode t)))
+(add-hook 'asm-mode-hook '(lambda () (gtags-mode t)))
+(add-hook 'makefile-mode-hook '(lambda () (gtags-mode t)))
 (setq gtags-suggested-key-mapping t)    ;gtags key mapping
 (setq gtags-auto-update t)
+
+(require 'projectile)
+(require 'helm-projectile)
+(projectile-global-mode)
+(setq projectile-completion-system 'default)
+(setq projectile-enable-caching t)
+(setq projectile-keymap-prefix (kbd "C-c p"))
+
+(autoload 'doxygen-insert-function-comment "doxygen" "insert comment for the function at point" t)
+(autoload 'doxygen-insert-file-comment "doxygen" "insert comment for file" t)
+(autoload 'doxygen-insert-member-group-region "doxygen" "insert comment for member group" t)
+(autoload 'doxygen-insert-compound-comment "doxygen" "insert comment for compound" t)
+
+;; ------------------------------------------------------------
+;; lisp
+;; ------------------------------------------------------------
+(setq edebug-trace t)			;edebug trace function
+(autoload 'turn-on-eldoc-mode "eldoc" nil t)
+(defun my/set-up-emacs-lisp-mode ()
+  "Set up some conveniences for Emacs Lisp."
+  (turn-on-eldoc-mode)
+  (local-set-key (kbd "C-c f") 'find-function)
+  (define-key emacs-lisp-mode-map (kbd "C-c .") 'find-function-at-point))
+(add-hook 'emacs-lisp-mode-hook 'my/set-up-emacs-lisp-mode)
+(add-hook 'lisp-interaction-mode-hook 'my/set-up-emacs-lisp-mode)
+(add-hook 'ielm-mode-hook 'my/set-up-emacs-lisp-mode)
+
+
+;; ------------------------------------------------------------
+;; cc-mode
+;; ------------------------------------------------------------
 
 ;; (local-set-key (kbd "C-x C-o") 'ff-find-other-file)
 ;; (local-set-key "\M-f" 'c-forward-into-nomenclature)
@@ -805,38 +820,19 @@ point reaches the beginning or end of the buffer, stop there."
 ;make a #define be left-aligned
 (setq c-electric-pound-behavior (quote (alignleft)))
 
-(require 'hippie-exp-ext)
-(global-set-key (kbd "C-@") 'hippie-expand-dabbrev-limited-chars)
-(global-set-key (kbd "M-/") 'hippie-expand-file-name)
 
-;; (autoload 'doxygen-insert-function-comment "doxygen" "insert comment for the function at point" t)
-;; (autoload 'doxygen-insert-file-comment "doxygen" "insert comment for file" t)
-;; (autoload 'doxygen-insert-member-group-region "doxygen" "insert comment for member group" t)
-;; (autoload 'doxygen-insert-compound-comment "doxygen" "insert comment for compound" t)
+(global-set-key (kbd "C-x C-o") 'ffap)
 
-(require 'highlight-symbol)
-(global-set-key (kbd "C-c h") nil)
-(global-set-key (kbd "C-c h l") 'highlight-symbol-at-point)
-(global-set-key (kbd "C-c h n") 'highlight-symbol-next)
-(global-set-key (kbd "C-c h p") 'highlight-symbol-prev)
-(global-set-key (kbd "C-c h r") 'highlight-symbol-query-replace)
-
-
-;; stardict
-(require 'sdcv-mode)
-(global-set-key (kbd "M-?") 'sdcv-search)
 
 ;; ;; Display Emacs Startup Time
 ;; (add-hook 'after-init-hook (lambda ()
 ;;                              (growl-notify-notification "Emacs Startup" (format "The init sequence took %s." (emacs-init-time)))))
+
+
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; It's not the end. It's just the end of beginning ...
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "It's not the end. It's just the end of beginning ...")
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
