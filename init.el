@@ -232,6 +232,7 @@ If REPOSITORY is specified, use that."
 ;; appearence management
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
 (when window-system
   (tooltip-mode -1)
   (tool-bar-mode -1)
@@ -328,6 +329,13 @@ If REPOSITORY is specified, use that."
   (unless (member major-mode linum-mode-inhibit-modes-list)
     ad-do-it))
 (ad-activate 'linum-on)
+
+
+;; ------------------------------------------------------------
+;; maxframe
+;; ------------------------------------------------------------
+(require 'maxframe)
+(add-hook 'window-setup-hook 'maximize-frame t)
 
 
 ;; ------------------------------------------------------------
@@ -751,7 +759,9 @@ point reaches the beginning or end of the buffer, stop there."
 (setq vc-diff-switches '("-b" "-B" "-u"))
 (which-function-mode 1)
 
+;; ------------------------------------------------------------
 ;; gtags
+;; ------------------------------------------------------------
 (autoload 'gtags-mode "gtags" "" t)
 (add-hook 'gtags-mode-hook
           '(lambda ()
@@ -772,6 +782,9 @@ point reaches the beginning or end of the buffer, stop there."
 (setq gtags-suggested-key-mapping t)    ;gtags key mapping
 (setq gtags-auto-update t)
 
+;; ------------------------------------------------------------
+;; projectile
+;; ------------------------------------------------------------
 (require 'projectile)
 (require 'helm-projectile)
 (projectile-global-mode)
