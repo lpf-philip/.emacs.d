@@ -21,3 +21,4 @@
    [back]
 
 的东西，其中那句 (color-theme-sitaramv-nt) 加入到你的 ~/.emacs 里面去， 就可以永久应用这个颜色主题了。
+

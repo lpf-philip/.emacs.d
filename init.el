@@ -116,25 +116,27 @@ If REPOSITORY is specified, use that."
 ;; color-theme
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (solarized-dark)
-;; (setq custom-enabled-themes (quote (solarized-dark)))
-;; (setq custom-safe-themes (quote ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (solarized-dark)))
- '(custom-safe-themes (quote ("756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))))
+;; (require 'color-theme)
+;; (color-theme-initialize)
+
+(setq custom-safe-themes (quote         ;color-hash-value
+                          ("756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" ;smart-mode-line
+                           "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" ;solarized
+                           default)))
+
+;; (require 'solarized-theme)
+;; (setq solarized-distinct-fringe-background t)
+;; (setq solarized-high-contrast-mode-line t)
+;; (setq solarized-use-less-bold t)
+(setq solarized-use-more-italic t)
+(setq solarized-emphasize-indicators nil)
+(setq x-underline-at-descent-line t)
+
+(load-theme 'solarized-dark t)
 
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "unknown" :family "DejaVu Sans Mono")))))
-
-
+ '(helm-selection ((t (:background "SkyBlue4" :foreground "black"))))
+ )
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; misc
@@ -236,22 +238,30 @@ If REPOSITORY is specified, use that."
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (blink-cursor-mode -1))
+
 (setq inhibit-startup-screen t)
+
 (setq scroll-margin 0
       scroll-conservatively 100000
       scroll-preserve-screen-position 1)
+
 (if (fboundp 'fringe-mode)
     (fringe-mode 4))			;default 8
+
 ;; frame buffer - buffer or file name
 (setq frame-title-format
       '("" invocation-name " xxx - " (:eval (if (buffer-file-name)
 						   (abbreviate-file-name (buffer-file-name))
 						 "%b"))))
+
 (setq visible-bell t)			;no audio but flash
+
 (setq-default indicate-empty-lines t)	;indicate the empty lines
 (setq-default show-trailing-whitespace t) ;show tailing whitespace
+
 (setq line-number-mode t)
 (setq column-number-mode t)
+
 (remove-hook 'text-mode-hook #'turn-on-auto-fill)
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 ;; (global-visual-line-mode 1) ; 1 for on, 0 for off.
@@ -460,7 +470,8 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 (require 'hippie-exp-ext)
-(global-set-key (kbd "C-@") 'hippie-expand-dabbrev-limited-chars)
+(when window-system
+  (global-set-key (kbd "C-@") 'hippie-expand-dabbrev-limited-chars))
 (global-set-key (kbd "M-/") 'hippie-expand-file-name)
 
 
@@ -481,9 +492,6 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings) ;; M-y
 (setq browse-kill-ring-quit-action 'save-and-restore)
-
-
-
 
 ;; ------------------------------------------------------------
 ;; helm mode
@@ -518,7 +526,6 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (setq ido-use-virtual-buffers t)
 ;; Allow the same buffer to be open in different frames
 (setq ido-default-buffer-method 'selected-window)
-
 
 ;; Use C-f during file selection to switch to regular find-file
 (require 'ido-ubiquitous)
@@ -576,7 +583,9 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; Edit the list and apply by [C-x C-s]. If you'd like to cancel, [C-c C-g]
 
 
-;; smartscan
+;; ------------------------------------------------------------
+;; smartscan - Searching based on the current word
+;; ------------------------------------------------------------
 (require 'smartscan)
 (global-smartscan-mode 1)
 
@@ -613,8 +622,6 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (require 'wgrep)
 (setq wgrep-enable-key "r")
 
-;; (require 'find-dired)
-;; (setq find-ls-option '("-print0 | xargs -0 ls -ld" . "-ld"))
 
 ;; ------------------------------------------------------------
 ;; yasnippet for make fast inser
@@ -641,12 +648,16 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; (setq company-idle-delay 0.2)
 ;; (setq company-clang-insert-arguments nil)
 
-
+;; ------------------------------------------------------------
 ;; auto insert pairs
+;; ------------------------------------------------------------
 (require 'smartparens)
 (require 'smartparens-config)
 (smartparens-global-mode t)
 
+;; ------------------------------------------------------------
+;; rainbow - colorful
+;; ------------------------------------------------------------
 (require 'rainbow-delimiters)
 ;; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (global-rainbow-delimiters-mode)
@@ -654,46 +665,12 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; (rainbow-identifiers-mode t)
 
 
-;; killing text
-(defadvice kill-region (before slick-cut activate compile)
-  "When called interactively with no active region, kill a single line instead."
-  (interactive
-   (if mark-active (list (region-beginning) (region-end))
-     (list (line-beginning-position)
-	   (line-beginning-position 2)))))
-
-
-;; smarter-move-beginning-of-line
-(defun smarter-move-beginning-of-line (arg)
-  "Move point back to indentation of beginning of line.
-Move point to the first non-whitespace character on this line.
-If point is already there, move to the beginning of the line.
-Effectively toggle between the first non-whitespace character and
-the beginning of the line.
-If ARG is not nil or 1, move forward ARG - 1 lines first.  If
-point reaches the beginning or end of the buffer, stop there."
-  (interactive "^p")
-  (setq arg (or arg 1))
-
-  ;; Move lines first
-  (when (/= arg 1)
-    (let ((line-move-visual nil))
-      (forward-line (1- arg))))
-
-  (let ((orig-point (point)))
-    (back-to-indentation)
-    (when (= orig-point (point))
-      (move-beginning-of-line 1))))
-
-;; remap C-a to `smarter-move-beginning-of-line'
-(global-set-key [remap move-beginning-of-line]
-		'smarter-move-beginning-of-line)
-
 ;; (use-package multiple-cursors
 ;;   :bind
 ;;    (("C->" . mc/mark-next-like-this)
 ;;     ("C-<" . mc/mark-previous-like-this)
 ;;     ("C-*" . mc/mark-all-like-this)))
+
 
 ;; ------------------------------------------------------------
 ;; tranpose
@@ -723,6 +700,46 @@ point reaches the beginning or end of the buffer, stop there."
 ;; ------------------------------------------------------------
 (require 'sdcv-mode)
 (global-set-key (kbd "M-?") 'sdcv-search)
+
+
+;; ------------------------------------------------------------
+;; killing text
+;; ------------------------------------------------------------
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+	   (line-beginning-position 2)))))
+
+
+;; ------------------------------------------------------------
+;; smarter-move-beginning-of-line
+;; ------------------------------------------------------------
+(defun smarter-move-beginning-of-line (arg)
+  "Move point back to indentation of beginning of line.
+Move point to the first non-whitespace character on this line.
+If point is already there, move to the beginning of the line.
+Effectively toggle between the first non-whitespace character and
+the beginning of the line.
+If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+point reaches the beginning or end of the buffer, stop there."
+  (interactive "^p")
+  (setq arg (or arg 1))
+
+  ;; Move lines first
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
+
+;; remap C-a to `smarter-move-beginning-of-line'
+(global-set-key [remap move-beginning-of-line]
+		'smarter-move-beginning-of-line)
 
 
 
@@ -820,13 +837,7 @@ point reaches the beginning or end of the buffer, stop there."
 ;make a #define be left-aligned
 (setq c-electric-pound-behavior (quote (alignleft)))
 
-
 (global-set-key (kbd "C-x C-o") 'ffap)
-
-
-;; ;; Display Emacs Startup Time
-;; (add-hook 'after-init-hook (lambda ()
-;;                              (growl-notify-notification "Emacs Startup" (format "The init sequence took %s." (emacs-init-time)))))
 
 
 
@@ -835,4 +846,3 @@ point reaches the beginning or end of the buffer, stop there."
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "It's not the end. It's just the end of beginning ...")
-
