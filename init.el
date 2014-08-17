@@ -121,7 +121,10 @@ If REPOSITORY is specified, use that."
 
 (setq custom-safe-themes (quote         ;color-hash-value
                           ("756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" ;smart-mode-line
-                           "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" ;solarized
+                           "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" ;solarized-dark
+                           "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" ;solarized-light
+                           "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" ;solarized-dark
+                           "e16a771a13a202ee6e276d06098bc77f008b73bbac4d526f160faa2d76c1dd0e" ;solarized
                            default)))
 
 ;; (require 'solarized-theme)
@@ -135,8 +138,11 @@ If REPOSITORY is specified, use that."
 (load-theme 'solarized-dark t)
 
 (custom-set-faces
- '(helm-selection ((t (:background "SkyBlue4" :foreground "black"))))
- )
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(helm-selection ((t (:background "SkyBlue4" :foreground "black")))))
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; misc
