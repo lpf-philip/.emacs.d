@@ -518,12 +518,13 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
       helm-quick-update t
       helm-M-x-requires-pattern nil
       helm-ff-skip-boring-files t)
-(helm-mode)
+(helm-mode 1)
 ;; I don't like the way switch-to-buffer uses history, since
 ;; that confuses me when it comes to buffers I've already
 ;; killed. Let's use ido instead.
 (add-to-list 'helm-completing-read-handlers-alist '(switch-to-buffer . ido))
 ;; (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+(global-set-key (kbd "C-c h") 'helm-mini)
 
 
 ;; ------------------------------------------------------------
@@ -637,6 +638,38 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (setq wgrep-enable-key "r")
 
 
+;; ;; ------------------------------------------------------------
+;; ;; auto-complete
+;; ;; ------------------------------------------------------------
+;; (require 'auto-complete)
+;; (add-hook 'c-mode-common-hook '(lambda ()
+
+;;                                  ;; ac-omni-completion-sources is made buffer local so
+;;                                  ;; you need to add it to a mode hook to activate on 
+;;                                  ;; whatever buffer you want to use it with.  This
+;;                                  ;; example uses C mode (as you probably surmised).
+
+;;                                  ;; auto-complete.el expects ac-omni-completion-sources to be
+;;                                  ;; a list of cons cells where each cell's car is a regex
+;;                                  ;; that describes the syntactical bits you want AutoComplete
+;;                                  ;; to be aware of. The cdr of each cell is the source that will
+;;                                  ;; supply the completion data.  The following tells autocomplete
+;;                                  ;; to begin completion when you type in a . or a ->
+
+;;                                  (add-to-list 'ac-omni-completion-sources
+;;                                               (cons "\\." '(ac-source-semantic)))
+;;                                  (add-to-list 'ac-omni-completion-sources
+;;                                               (cons "->" '(ac-source-semantic)))
+
+;;                                  ;; ac-sources was also made buffer local in new versions of
+;;                                  ;; autocomplete.  In my case, I want AutoComplete to use 
+;;                                  ;; semantic and yasnippet (order matters, if reversed snippets
+;;                                  ;; will appear before semantic tag completions).
+
+;;                                  (setq ac-sources '(ac-source-semantic ac-source-yasnippet))
+;;                                  ))
+
+
 ;; ------------------------------------------------------------
 ;; yasnippet for make fast inser
 ;; ------------------------------------------------------------
@@ -656,11 +689,48 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (autoload 'company-mode "company" nil t)
 (add-hook 'prog-mode-hook 'global-company-mode)
 (global-set-key (kbd "C-c o") 'company-complete)
+(global-set-key (kbd "C-o") 'company-complete)
 (setq company-require-match nil)
 ;; (setq company-dabbrev-downcase nil)
 (setq company-show-numbers t)           ;first ten candiate
 ;; (setq company-idle-delay 0.2)
 ;; (setq company-clang-insert-arguments nil)
+
+;; (defun check-expansion ()
+;;   (save-excursion
+;;     (if (looking-at "\\_>") t
+;;       (backward-char 1)
+;;       (if (looking-at "\\.") t
+;;         (backward-char 1)
+;;         (if (looking-at "->") t nil)))))
+
+;; (defun do-yas-expand ()
+;;   (let ((yas/fallback-behavior 'return-nil))
+;;     (yas/expand)))
+
+;; (defun tab-indent-or-complete ()
+;;   (interactive)
+;;   (if (minibufferp)
+;;       (minibuffer-complete)
+;;     (if (or (not yas/minor-mode)
+;;             (null (do-yas-expand)))
+;;         (if (check-expansion)
+;;             (company-complete-common)
+;;           (indent-for-tab-command)))))
+
+;; (global-set-key [tab] 'tab-indent-or-complete)
+
+;; (require 'color)
+;; (let ((bg (face-attribute 'default :background)))
+;;   (custom-set-faces
+;;    `(company-tooltip ((t (:inherit default :background ,(color-lighten-name bg 2)))))
+;;    `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 10)))))
+;;    `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
+;;    `(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
+;;    `(company-tooltip-common ((t (:inherit font-lock-constant-face))))))
+
+
+
 
 ;; ------------------------------------------------------------
 ;; auto insert pairs
@@ -702,11 +772,10 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; highlight
 ;; ------------------------------------------------------------
 (require 'highlight-symbol)
-(global-set-key (kbd "C-c h") nil)
-(global-set-key (kbd "C-c h l") 'highlight-symbol-at-point)
-(global-set-key (kbd "C-c h n") 'highlight-symbol-next)
-(global-set-key (kbd "C-c h p") 'highlight-symbol-prev)
-(global-set-key (kbd "C-c h r") 'highlight-symbol-query-replace)
+(global-set-key (kbd "C-c l l") 'highlight-symbol-at-point)
+(global-set-key (kbd "C-c l n") 'highlight-symbol-next)
+(global-set-key (kbd "C-c l p") 'highlight-symbol-prev)
+(global-set-key (kbd "C-c l r") 'highlight-symbol-query-replace)
 
 
 ;; ------------------------------------------------------------
@@ -754,6 +823,12 @@ point reaches the beginning or end of the buffer, stop there."
 ;; remap C-a to `smarter-move-beginning-of-line'
 (global-set-key [remap move-beginning-of-line]
 		'smarter-move-beginning-of-line)
+
+
+;; ------------------------------------------------------------
+;; multi-eshell
+;; ------------------------------------------------------------
+(require 'multi-eshell)
 
 
 
