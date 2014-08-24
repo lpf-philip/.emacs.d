@@ -173,6 +173,8 @@ If REPOSITORY is specified, use that."
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)	;goto previous mark position
 (setq set-mark-command-repeat-pop t)
 
+(mouse-avoidance-mode 'animate)         ;move mouse away when curser in
+
 ;; ------------------------------------------------------------
 ;; emacs garbage collection system settings
 ;; ------------------------------------------------------------
