@@ -144,6 +144,8 @@ If REPOSITORY is specified, use that."
  ;; If there is more than one, they won't work right.
  '(helm-selection ((t (:background "SkyBlue4" :foreground "black")))))
 
+
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; misc
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -244,7 +246,7 @@ If REPOSITORY is specified, use that."
 (when window-system
   (tooltip-mode -1)
   (tool-bar-mode -1)
-  (menu-bar-mode -1)
+  (menu-bar-mode 1)
   (scroll-bar-mode -1)
   (blink-cursor-mode -1))
 
