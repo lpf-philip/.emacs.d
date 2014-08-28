@@ -285,7 +285,7 @@ If REPOSITORY is specified, use that."
       '(
         ;; if frame created on x display
         (x
-	 (menu-bar-lines . nil)
+	 (menu-bar-lines . 1)
 	 (tool-bar-lines . nil)
 	 ;; mouse
 	 (mouse-wheel-mode . 1)
@@ -942,6 +942,41 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "C-x C-o") 'ffap)
 
 
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; LaTeX
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+(require 'reftex)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+(add-hook 'latex-mode-hook 'turn-on-reftex)   ; with Emacs latex mode
+(setq reftex-plug-into-AUCTeX t)
+
+(mapc (lambda (mode)
+      (add-hook 'LaTeX-mode-hook mode))
+      (list 'auto-fill-mode
+            'LaTeX-math-mode
+            'turn-on-reftex
+            'linum-mode))
+
+
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (setq TeX-auto-untabify t     ; remove all tabs before saving
+                  ;; TeX-engine 'xetex       ; use xelatex default
+                  TeX-show-compilation t) ; display compilation windows
+            (TeX-global-PDF-mode t)       ; PDF mode enable, not plain
+            (setq TeX-save-query nil)
+            (imenu-add-menubar-index)
+            (define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)))
+
+
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (setq TeX-view-program-selection '((output-pdf "Okular")
+                                               (output-dvi "Okular")))))
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; It's not the end. It's just the end of beginning ...
