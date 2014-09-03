@@ -853,8 +853,7 @@ point reaches the beginning or end of the buffer, stop there."
 ;; ------------------------------------------------------------
 (autoload 'gtags-mode "gtags" "" t)
 (add-hook 'gtags-mode-hook
-          '(lambda ()
-             ;;                            ; Local customization (overwrite key mapping)
+          '(lambda () ; Local customization (overwrite key mapping)
              ;; (define-key gtags-mode-map "\C-f" 'scroll-up)
              ;; (define-key gtags-mode-map "\C-b" 'scroll-down)
              ))
@@ -870,6 +869,7 @@ point reaches the beginning or end of the buffer, stop there."
 (add-hook 'makefile-mode-hook '(lambda () (gtags-mode t)))
 (setq gtags-suggested-key-mapping t)    ;gtags key mapping
 (setq gtags-auto-update t)
+
 
 ;; ------------------------------------------------------------
 ;; projectile
@@ -940,7 +940,7 @@ point reaches the beginning or end of the buffer, stop there."
 (setq c-electric-pound-behavior (quote (alignleft)))
 
 (global-set-key (kbd "C-x C-o") 'ffap)
-
+(global-set-key (kbd "C-c m") 'helm-imenu)
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LaTeX
@@ -970,13 +970,16 @@ point reaches the beginning or end of the buffer, stop there."
             (TeX-global-PDF-mode t)       ; PDF mode enable, not plain
             (setq TeX-save-query nil)
             (imenu-add-menubar-index)
-            (define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)))
+            ;; (define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)
+            ))
 
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
             (setq TeX-view-program-selection '((output-pdf "Okular")
                                                (output-dvi "Okular")))))
+
+
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; It's not the end. It's just the end of beginning ...
