@@ -940,7 +940,7 @@ point reaches the beginning or end of the buffer, stop there."
 (setq c-electric-pound-behavior (quote (alignleft)))
 
 (global-set-key (kbd "C-x C-o") 'ffap)
-(global-set-key (kbd "C-c m") 'helm-imenu)
+(global-set-key (kbd "M-m") 'helm-imenu)
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LaTeX
