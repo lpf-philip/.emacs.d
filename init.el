@@ -10,7 +10,6 @@
 
 (package-initialize nil)
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp"))
 ;; add the path(always http) to fetch packages.
 (dolist (source '(("marmalade" . "http://marmalade-repo.org/packages/")
