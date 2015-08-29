@@ -979,6 +979,12 @@ point reaches the beginning or end of the buffer, stop there."
                                                (output-dvi "Okular")))))
 
 
+;; refresh file
+(defun refresh-file ()
+  (interactive)
+  (revert-buffer t (not (buffer-modified-p)) t))
+(global-set-key (kbd "C-x g") 'refresh-file)
+
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; It's not the end. It's just the end of beginning ...
