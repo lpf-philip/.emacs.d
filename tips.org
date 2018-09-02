@@ -6,19 +6,7 @@
   (global-set-key (kbd "C-j") 'goto-line)
   # define-key第一个参数map一般为mode后面直接加”-map”
   (define-key c++-mode-map (kbd "C-j") 'goto-line)
-*  color
-   (set-background-color "black") ;; 使用黑色背景
-   (set-foreground-color "white") ;; 使用白色前景
-
-   (set-face-foreground 'region "red")  ;; 区域前景颜色设为红色
-   (set-face-background 'region "blue") ;; 区域背景色设为蓝色
-   首先下载 color-theme.el 1，然后把它放在你的加载路径里面，最后在你的 ~/.emacs 里面加上 (require 'color-theme) 就可以使用了。现在重新启动一 下 Emacs ，然后就可以用 M-x color-theme-select 来选择你喜欢的颜色主题 了，它会打开一个列表，在每个列表项目上回车会应用那个颜色主题，如果选上 了某个主题，按一下 d ，会出现类似：
-
-   color-theme-sitaramv-nt is an interactive compiled Lisp function in `color-theme.el'.
-   (color-theme-sitaramv-nt)
-   Black foreground on white background.
-   Includes faces for font-lock, widget, custom, speedbar.
-   [back]
-
-的东西，其中那句 (color-theme-sitaramv-nt) 加入到你的 ~/.emacs 里面去， 就可以永久应用这个颜色主题了。
-
+* micro
+  C-x (
+  C-x )
+  C-x C-e

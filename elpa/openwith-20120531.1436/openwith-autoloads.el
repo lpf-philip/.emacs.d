@@ -2,14 +2,17 @@
 ;;
 ;;; Code:
 
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory #$) (car load-path))))
+
 
-;;;### (autoloads (openwith-mode) "openwith" "openwith.el" (21442
-;;;;;;  5631 549539 29000))
+;;;### (autoloads nil "openwith" "openwith.el" (0 0 0 0))
 ;;; Generated autoloads from openwith.el
 
 (defvar openwith-mode nil "\
 Non-nil if Openwith mode is enabled.
-See the command `openwith-mode' for a description of this minor mode.
+See the `openwith-mode' command
+for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `openwith-mode'.")
@@ -19,16 +22,17 @@ or call the function `openwith-mode'.")
 (autoload 'openwith-mode "openwith" "\
 Automatically open files with external programs.
 
+If called interactively, enable Openwith mode if ARG is positive, and
+disable it if ARG is zero or negative.  If called from Lisp,
+also enable the mode if ARG is omitted or nil, and toggle it
+if ARG is `toggle'; disable the mode otherwise.
+
 \(fn &optional ARG)" t nil)
 
-;;;***
-
-;;;### (autoloads nil nil ("openwith-pkg.el") (21442 5631 676278
-;;;;;;  369000))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "openwith" '("openwith-")))
 
 ;;;***
 
-(provide 'openwith-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t

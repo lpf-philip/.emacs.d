@@ -1,1 +1,34 @@
 FOR THE BEST
+
+
+openwith
+guide-key
+maxframe
+window-number
+smart-mode-line
+    linemode refine
+diminish
+    linemode refine abbreviation
+smex
+undo-tree
+browse-kill-ring
+smartscan
+    Searching based on the current word
+yasnippet
+smartparens
+rainbow-delimiters
+highlight-symbol
+sdcv-mode
+    sdcv
+unicad
+    for languages environment
+helm
+helm-swoop
+    a fast way to search things
+ido
+recentf
+    recent files
+ggtags
+    Compile and install Global with exuberant-ctags:
+        ./configure --prefix=<PREFIX> --with-exuberant-ctags=/usr/local/bin/ctags
+projectile
