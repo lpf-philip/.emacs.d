@@ -208,7 +208,7 @@
  '(custom-safe-themes
    '("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default))
  '(package-selected-packages
-   '(helm-c-moccur magit yasnippet window-number undo-tree solarized-theme smex smartscan smartparens smart-mode-line rainbow-delimiters projectile openwith maxframe highlight-symbol helm-swoop guide-key ggtags diminish browse-kill-ring)))
+   '(wgrep helm-c-moccur magit yasnippet window-number undo-tree solarized-theme smex smartscan smartparens smart-mode-line rainbow-delimiters projectile openwith maxframe highlight-symbol helm-swoop guide-key ggtags diminish browse-kill-ring)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -450,6 +450,11 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (add-hook 'prog-mode-hook 'ggtags-mode)
 
 ;; ------------------------------------------------------------
+;; wgrep
+;; ------------------------------------------------------------
+(require 'wgrep)
+
+;; ------------------------------------------------------------
 ;; doxygen
 ;; ------------------------------------------------------------
 (autoload 'doxygen-insert-function-comment "doxygen" "insert comment for the function at point" t)
@@ -479,9 +484,25 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; (setq helm-autoresize-min-height 20)
 (helm-autoresize-mode 1)
 
+;; fuzzy match
+(setq helm-recentf-fuzzy-match t)
+(setq helm-buffers-fuzzy-matching t)
+(setq helm-M-x-fuzzy-match t)
+(setq helm-semantic-fuzzy-match t)
+(setq helm-imenu-fuzzy-match t)
+(setq helm-apropos-fuzzy-match t)
+(setq helm-lisp-fuzzy-completion t)
+(setq helm-session-fuzzy-match t)
+
+(setq helm-mode-fuzzy-match t)
+(setq helm-completion-in-region-fuzzy-match t)
+;; (setq helm-candidate-number-limit 50)
+
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 (global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-b") 'helm-mini)
 
 (helm-mode 1)
 ;; I don't like the way switch-to-buffer uses history, since
