@@ -215,7 +215,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(company-tooltip ((t (:foreground "white"))))
- '(helm-selection ((t (:background "black" :distant-foreground "white")))))
+ '(helm-selection ((t (:background "blue" :distant-foreground "yellow")))))
 
 ;; ------------------------------------------------------------
 ;; theme: solarized-theme
@@ -418,7 +418,7 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; ------------------------------------------------------------
 ;; yasnippet for make fast inser
 ;; ------------------------------------------------------------
-;; customize-face: (company-tooltip ((t (:foreground "white"))))
+;; customize-face: '(company-tooltip ((t (:foreground "white"))))
 (require 'company)
 (setq company-idle-delay 0.2)
 (add-hook 'after-init-hook 'global-company-mode)
@@ -466,7 +466,7 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; helm mode
 ;; ------------------------------------------------------------
 ;; customize-face:
-;; (helm-selection ((t (:background "black" :distant-foreground "white"))))
+;; '(helm-selection ((t (:background "blue" :distant-foreground "yellow"))))
 (require 'helm)
 (require 'helm-config)
 (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
