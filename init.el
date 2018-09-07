@@ -208,13 +208,14 @@
  '(custom-safe-themes
    '("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default))
  '(package-selected-packages
-   '(wgrep helm-c-moccur magit yasnippet window-number undo-tree solarized-theme smex smartscan smartparens smart-mode-line rainbow-delimiters projectile openwith maxframe highlight-symbol helm-swoop guide-key ggtags diminish browse-kill-ring)))
+   '(yasnippet-snippets company wgrep helm-c-moccur magit yasnippet window-number undo-tree solarized-theme smex smartscan smartparens smart-mode-line rainbow-delimiters projectile openwith maxframe highlight-symbol helm-swoop guide-key ggtags diminish browse-kill-ring)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(company-tooltip ((t (:foreground "white"))))
+ '(helm-selection ((t (:background "black" :distant-foreground "white")))))
 
 ;; ------------------------------------------------------------
 ;; theme: solarized-theme
@@ -411,9 +412,16 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; yasnippet for make fast inser
 ;; ------------------------------------------------------------
 (require 'yasnippet)
+(require 'yasnippet-snippets)
 (yas-global-mode 1)
-(setq yas-prompt-functions '(yas-ido-prompt
-                             yas-completing-prompt))
+
+;; ------------------------------------------------------------
+;; yasnippet for make fast inser
+;; ------------------------------------------------------------
+;; customize-face: (company-tooltip ((t (:foreground "white"))))
+(require 'company)
+(setq company-idle-delay 0.2)
+(add-hook 'after-init-hook 'global-company-mode)
 
 ;; ------------------------------------------------------------
 ;; projectile
@@ -455,16 +463,10 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (require 'wgrep)
 
 ;; ------------------------------------------------------------
-;; doxygen
-;; ------------------------------------------------------------
-(autoload 'doxygen-insert-function-comment "doxygen" "insert comment for the function at point" t)
-(autoload 'doxygen-insert-file-comment "doxygen" "insert comment for file" t)
-(autoload 'doxygen-insert-member-group-region "doxygen" "insert comment for member group" t)
-(autoload 'doxygen-insert-compound-comment "doxygen" "insert comment for compound" t)
-
-;; ------------------------------------------------------------
 ;; helm mode
 ;; ------------------------------------------------------------
+;; customize-face:
+;; (helm-selection ((t (:background "black" :distant-foreground "white"))))
 (require 'helm)
 (require 'helm-config)
 (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
@@ -549,37 +551,8 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 (setq ido-use-virtual-buffers t)
 ;; Allow the same buffer to be open in different frames
 (setq ido-default-buffer-method 'selected-window)
-
-;; Use C-f during file selection to switch to regular find-file
-;; (require 'ido-ubiquitous)
-
-;; ------------------------------------------------------------
-;; recent mode
-;; ------------------------------------------------------------
-(require 'recentf)
-(setq recentf-max-saved-items 200
-      recentf-exclude '("/tmp/"
-                        "/ssh:"
-                        "/sudo:"
-                        "/home/[a-z]\+/\\.")
-      recentf-max-menu-items 15)
-(recentf-mode t)
-(setq recentf-keep '(file-remote-p file-readable-p))
-(defun file-name-with-one-directory (file-name)
-  (concat (cadr (reverse (split-string file-name "/"))) "/"
-          (file-name-nondirectory file-name)))
-(defun recentf--file-cons (file-name)
-  (cons (file-name-with-one-directory file-name) file-name))
-(defun recentf-ido-find-file ()
-  "Find a recent file using ido."
-  (interactive)
-  (let* ((recent-files (mapcar 'recentf--file-cons recentf-list))
-         (files (mapcar 'car recent-files))
-         (file (ido-completing-read "Choose recent file: " files))) ;philip add ido
-    (find-file (cdr (assoc file recent-files)))))
-
-(global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
 (ido-mode -1)
+
 ;; ------------------------------------------------------------
 ;; magit
 ;; ------------------------------------------------------------
