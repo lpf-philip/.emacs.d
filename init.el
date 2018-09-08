@@ -214,7 +214,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-tooltip ((t (:foreground "white"))))
+ '(company-tooltip ((t (:foreground "yellow"))))
+ '(company-tooltip-selection ((t (:background "blue"))))
  '(helm-selection ((t (:background "blue" :distant-foreground "yellow")))))
 
 ;; ------------------------------------------------------------
@@ -418,7 +419,6 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; ------------------------------------------------------------
 ;; yasnippet for make fast inser
 ;; ------------------------------------------------------------
-;; customize-face: '(company-tooltip ((t (:foreground "white"))))
 (require 'company)
 (setq company-idle-delay 0.2)
 (add-hook 'after-init-hook 'global-company-mode)
@@ -465,8 +465,6 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; ------------------------------------------------------------
 ;; helm mode
 ;; ------------------------------------------------------------
-;; customize-face:
-;; '(helm-selection ((t (:background "blue" :distant-foreground "yellow"))))
 (require 'helm)
 (require 'helm-config)
 (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
