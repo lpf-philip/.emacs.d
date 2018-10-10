@@ -208,7 +208,7 @@
  '(custom-safe-themes
    '("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default))
  '(package-selected-packages
-   '(yasnippet-snippets company wgrep helm-c-moccur magit yasnippet window-number undo-tree solarized-theme smex smartscan smartparens smart-mode-line rainbow-delimiters projectile openwith maxframe highlight-symbol helm-swoop guide-key ggtags diminish browse-kill-ring)))
+   '(py-autopep8 flycheck elpy yasnippet-snippets company wgrep helm-c-moccur magit yasnippet window-number undo-tree solarized-theme smex smartscan smartparens smart-mode-line rainbow-delimiters projectile openwith maxframe highlight-symbol helm-swoop guide-key ggtags diminish browse-kill-ring)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -421,6 +421,7 @@ With a prefix arg, change arrangement from 'side-by-side' to 'stacked'."
 ;; ------------------------------------------------------------
 (require 'company)
 (setq company-idle-delay 0.2)
+(setq company-show-numbers t)
 (add-hook 'after-init-hook 'global-company-mode)
 
 ;; ------------------------------------------------------------
@@ -669,6 +670,28 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "C-x C-o") 'ffap)
 (global-set-key (kbd "M-m") 'helm-imenu)
 
+;; ------------------------------------------------------------
+;; flycheck
+;; ------------------------------------------------------------
+(require 'flycheck)
+;; (global-flycheck-mode)
+
+;; ------------------------------------------------------------
+;; python
+;; ------------------------------------------------------------
+;; pip install flake8 jedi importmagic autopep8 yapf rope
+(require 'elpy)
+(elpy-enable)
+(setq elpy-rpc--backend "jedi")
+
+;; use flycheck not flymake with elpy
+(when (require 'flycheck nil t)
+  (setq elpy-modules(delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+;; enable autopep8 formatting on save
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
